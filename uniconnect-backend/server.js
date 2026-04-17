@@ -13,6 +13,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// 🔥 ADD THIS (VERY IMPORTANT)
+app.use("/uploads", express.static("uploads"));
+
 // ✅ Connect MongoDB
 connectDB();
 

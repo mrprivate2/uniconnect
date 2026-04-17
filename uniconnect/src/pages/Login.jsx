@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = () => {
@@ -11,8 +12,13 @@ export default function Login({ onLogin }) {
       alert("Please enter your Gmail address");
       return;
     }
-    onLogin({ name: email.split("@")[0], email });
-    navigate("/select-college");
+
+    setLoading(true);
+
+    setTimeout(() => {
+      onLogin({ name: email.split("@")[0], email });
+      navigate("/select-college");
+    }, 800);
   };
 
   const handleGuestLogin = () => {
@@ -27,13 +33,17 @@ export default function Login({ onLogin }) {
 
   return (
     <motion.div
-      className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-900 via-black to-purple-950 text-white"
+      className="flex flex-col items-center justify-center min-h-screen 
+      bg-gradient-to-br from-purple-900 via-black to-purple-950 text-white px-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      {/* Logo */}
+
+      {/* 🔥 Logo */}
       <motion.h1
-        className="text-6xl font-extrabold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"
+        className="text-6xl font-extrabold mb-10 
+        text-transparent bg-clip-text 
+        bg-gradient-to-r from-purple-400 to-pink-600"
         initial={{ y: -40 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
@@ -41,48 +51,76 @@ export default function Login({ onLogin }) {
         UniConnect
       </motion.h1>
 
-      {/* Login Card */}
+      {/* 🔥 Card */}
       <motion.div
-        className="bg-white/10 backdrop-blur-xl p-8 rounded-2xl shadow-xl w-80 flex flex-col items-center"
+        className="bg-white/10 backdrop-blur-xl 
+        border border-purple-500/20 
+        p-8 rounded-2xl shadow-2xl 
+        w-full max-w-sm flex flex-col items-center"
         initial={{ scale: 0.9 }}
         animate={{ scale: 1 }}
       >
+
+        {/* Label */}
         <label className="w-full text-left mb-2 text-gray-300 font-medium">
           Gmail Address
         </label>
+
+        {/* 🔥 Input */}
         <input
           type="email"
           placeholder="example@gmail.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full px-4 py-3 rounded-lg bg-white/20 text-white border border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-400 placeholder-gray-300"
+          className="w-full px-4 py-3 rounded-lg 
+          bg-white/10 text-white 
+          border border-purple-500/30 
+          focus:outline-none focus:ring-2 focus:ring-purple-400 
+          placeholder-gray-400 transition"
         />
 
+        {/* 🔥 Main Button */}
         <button
           onClick={handleLogin}
-          className="mt-5 w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-3 rounded-lg hover:opacity-90 transition"
+          disabled={loading}
+          className="mt-5 w-full 
+          bg-gradient-to-r from-purple-600 to-pink-600 
+          text-white font-semibold py-3 rounded-lg 
+          hover:opacity-90 transition 
+          disabled:opacity-50"
         >
-          Continue with Gmail
+          {loading ? "Signing in..." : "Continue with Gmail"}
         </button>
 
+        {/* Divider */}
         <div className="my-4 text-gray-400 text-sm">— OR —</div>
 
+        {/* Guest */}
         <button
           onClick={handleGuestLogin}
-          className="w-full bg-gradient-to-r from-indigo-600 to-blue-500 text-white font-semibold py-3 rounded-lg hover:opacity-90 transition"
+          className="w-full bg-gradient-to-r from-indigo-600 to-blue-500 
+          text-white font-semibold py-3 rounded-lg 
+          hover:opacity-90 transition"
         >
           Continue as Guest
         </button>
 
+        {/* Admin */}
         <button
           onClick={handleAdminLogin}
-          className="mt-4 w-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold py-3 rounded-lg hover:opacity-90 transition"
+          className="mt-4 w-full bg-gradient-to-r from-blue-600 to-cyan-500 
+          text-white font-semibold py-3 rounded-lg 
+          hover:opacity-90 transition"
         >
           Login as Admin
         </button>
+
       </motion.div>
 
-      <p className="mt-10 text-gray-400 text-sm">© 2025 UniConnect</p>
+      {/* Footer */}
+      <p className="mt-10 text-gray-400 text-sm">
+        © 2026 UniConnect
+      </p>
     </motion.div>
   );
 }

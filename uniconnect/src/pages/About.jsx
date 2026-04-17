@@ -2,28 +2,67 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Info } from "lucide-react";
 
+const containerVariants = {
+  hidden: {},
+  show: {
+    transition: {
+      staggerChildren: 0.15,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0 },
+};
+
 const About = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-darkBg via-black to-darkBg text-white p-6">
+
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8 }}
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
         className="max-w-3xl mx-auto text-center"
       >
-        <Info className="mx-auto mb-3 text-neonBlue" size={40} />
-        <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-neonPink to-neonBlue text-transparent bg-clip-text">
+
+        {/* Icon */}
+        <motion.div variants={itemVariants}>
+          <Info className="mx-auto mb-3 text-neonBlue drop-shadow-[0_0_10px_#3b82f6]" size={40} />
+        </motion.div>
+
+        {/* Title */}
+        <motion.h1
+          variants={itemVariants}
+          className="text-4xl font-bold mb-3 
+          bg-gradient-to-r from-neonPink to-neonBlue 
+          text-transparent bg-clip-text"
+        >
           About UniConnect
-        </h1>
-        <p className="text-gray-300 leading-relaxed">
+        </motion.h1>
+
+        {/* Description */}
+        <motion.p
+          variants={itemVariants}
+          className="text-gray-300 leading-relaxed max-w-2xl mx-auto"
+        >
           UniConnect is a campus-wide social hub connecting students, hackathon
           enthusiasts, and learners. Share ideas, find teammates, and explore
           events — all in one vibrant network built for universities. 🌐✨
-        </p>
-        <div className="mt-6 grid sm:grid-cols-2 gap-4">
+        </motion.p>
+
+        {/* Cards */}
+        <div className="mt-8 grid sm:grid-cols-2 gap-5">
+
+          {/* Mission */}
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-cardBg rounded-2xl p-5 shadow-md"
+            variants={itemVariants}
+            whileHover={{ scale: 1.05, rotateX: 3 }}
+            className="bg-cardBg/70 backdrop-blur-md 
+            border border-purple-500/20 
+            rounded-2xl p-5 shadow-lg 
+            hover:shadow-purple-500/20 transition"
           >
             <h2 className="text-xl font-semibold text-neonBlue mb-2">
               Our Mission
@@ -33,9 +72,15 @@ const About = () => {
               technology and teamwork.
             </p>
           </motion.div>
+
+          {/* Vision */}
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="bg-cardBg rounded-2xl p-5 shadow-md"
+            variants={itemVariants}
+            whileHover={{ scale: 1.05, rotateX: 3 }}
+            className="bg-cardBg/70 backdrop-blur-md 
+            border border-purple-500/20 
+            rounded-2xl p-5 shadow-lg 
+            hover:shadow-pink-500/20 transition"
           >
             <h2 className="text-xl font-semibold text-neonPink mb-2">
               Our Vision
@@ -45,7 +90,9 @@ const About = () => {
               creative minds working together.
             </p>
           </motion.div>
+
         </div>
+
       </motion.div>
     </div>
   );
