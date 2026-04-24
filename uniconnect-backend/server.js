@@ -122,9 +122,26 @@ app.use(helmet({
 }));
 app.use(compression());
 
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://uniconnect-iy6ox3y49-mrprivate2s-projects.vercel.app"
+].filter(Boolean);
+
 const corsOptions = {
-  origin: process.env.CLIENT_URL || "*",
+  origin: (origin, callback) => {
+    // allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes("*")) {
+      callback(null, true);
+    } else {
+      console.error(`❌ CORS Error: Origin ${origin} not allowed by config.`);
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
+  optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
 app.use(express.json({ limit: "50mb" }));
