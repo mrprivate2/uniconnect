@@ -38,6 +38,31 @@ import collegeRoutes from "./routes/collegeRoutes.js";
 import followRoutes from "./routes/followRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 
+// =========================
+// 🌐 CORS CONFIGURATION
+// =========================
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "http://localhost:5173",
+  "http://localhost:3000",
+].filter(Boolean);
+
+const checkOrigin = (origin, callback) => {
+  // Allow if no origin (like mobile apps/curl)
+  if (!origin) return callback(null, true);
+
+  const isAllowed = allowedOrigins.includes(origin) || 
+                    origin.endsWith(".vercel.app") || 
+                    allowedOrigins.includes("*");
+
+  if (isAllowed) {
+    callback(null, true);
+  } else {
+    console.error(`❌ CORS Error: Origin ${origin} not allowed by config.`);
+    callback(new Error("Not allowed by CORS"));
+  }
+};
+
 // Connect to Database
 // connectDB(); // Removed MongoDB
 
@@ -49,8 +74,9 @@ const server = http.createServer(app);
 // =========================
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || "*",
-    methods: ["GET", "POST"]
+    origin: checkOrigin,
+    methods: ["GET", "POST"],
+    credentials: true
   },
 });
 
@@ -122,29 +148,8 @@ app.use(helmet({
 }));
 app.use(compression());
 
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  "http://localhost:5173",
-  "http://localhost:3000",
-].filter(Boolean);
-
 const corsOptions = {
-  origin: (origin, callback) => {
-    // 1. Allow if no origin (like mobile apps/curl)
-    if (!origin) return callback(null, true);
-
-    // 2. Check if it's in our allowed list or is a Vercel deployment
-    const isAllowed = allowedOrigins.includes(origin) || 
-                      origin.endsWith(".vercel.app") || 
-                      allowedOrigins.includes("*");
-
-    if (isAllowed) {
-      callback(null, true);
-    } else {
-      console.error(`❌ CORS Error: Origin ${origin} not allowed by config.`);
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: checkOrigin,
   credentials: true,
   optionsSuccessStatus: 200
 };
