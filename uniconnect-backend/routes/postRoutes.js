@@ -12,7 +12,8 @@ import {
   updatePost,
   applyToPost,
   getApplicants,
-  getMyEventsWithApplicants
+  getMyEventsWithApplicants,
+  getSinglePost
 } from "../controllers/postController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
@@ -82,6 +83,7 @@ router.post("/:id/comment", protect, addComment);
 router.post("/:id/apply", protect, applyToPost);
 
 router.route("/:id")
+  .get(getSinglePost)
   .delete(protect, deletePost)
   .put(protect, updatePost);
 

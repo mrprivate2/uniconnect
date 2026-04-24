@@ -10,6 +10,26 @@ import { useAuth } from "../context/AuthContext";
 import { getMediaUrl } from "../utils/media";
 import toast from "react-hot-toast";
 
+// 📡 RADAR SCAN ANIMATION
+const RadarScan = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-10"
+        >
+            <div className="w-1/2 h-1/2 bg-gradient-to-tr from-blue-500/20 to-transparent rounded-tl-full origin-bottom-right" />
+        </motion.div>
+        {[...Array(3)].map((_, i) => (
+            <div 
+                key={i} 
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border border-blue-500/10"
+                style={{ width: (i + 1) * 300, height: (i + 1) * 300 }}
+            />
+        ))}
+    </div>
+);
+
 export default function Notifications() {
   const { user } = useAuth();
   const [notifications, setNotifications] = useState([]);
@@ -61,8 +81,9 @@ export default function Notifications() {
   };
 
   return (
-    <div className="min-h-screen pb-40 font-sans bg-mesh text-slate-900">
-      <div className="max-w-2xl mx-auto p-6 pt-16 md:pt-24">
+    <div className="min-h-screen pb-40 font-sans bg-mesh text-slate-900 relative overflow-hidden selection:bg-blue-100">
+      <RadarScan />
+      <div className="max-w-2xl mx-auto p-6 pt-16 md:pt-24 relative z-10">
         
         <header className="mb-12 flex justify-between items-end">
           <div>

@@ -54,6 +54,39 @@ export const getPosts = catchAsync(async (req, res) => {
 });
 
 /* =========================
+   ✅ GET SINGLE POST
+========================= */
+export const getSinglePost = catchAsync(async (req, res) => {
+  const { data: post, error } = await supabase
+    .from("posts")
+    .select(`
+      id, content, type, title, price, location, event_date, category, image, media_type, visibility, created_at,
+      author:users(id, name, username, avatar),
+      comments:comments(id, text, created_at, user:users(id, name, username, avatar)),
+      likes:likes(user_id)
+    `)
+    .eq("id", req.params.id)
+    .single();
+
+  if (error) throw error;
+  if (!post) return res.status(404).json({ error: "Post not found" });
+
+  const formattedPost = {
+    ...post,
+    _id: post.id,
+    likes: post.likes?.map(l => l.user_id) || [],
+    comments: post.comments?.map(c => ({
+      ...c,
+      _id: c.id,
+      user: c.user ? { ...c.user, _id: c.user.id } : null
+    })) || [],
+    author: post.author ? { ...post.author, _id: post.author.id } : null
+  };
+
+  res.json(formattedPost);
+});
+
+/* =========================
    ✅ GET POSTS BY TYPE
 ========================= */
 export const getPostsByType = catchAsync(async (req, res) => {
@@ -594,8 +627,7 @@ export const updatePost = catchAsync(async (req, res) => {
       location,
       event_date: eventDate,
       category,
-      visibility,
-      updated_at: new Date()
+      visibility
     })
     .eq("id", postId)
     .select(`

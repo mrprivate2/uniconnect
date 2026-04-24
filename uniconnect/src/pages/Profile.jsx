@@ -1,8 +1,10 @@
+// 🚀 UniConnect Profile Logic - Updated 2026-04-24
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Grid, Film, UserSquare2, PlusSquare, Menu, ChevronDown, 
-  Link as LinkIcon, Camera, Heart, User as UserIcon, Lock, Share, Settings, X, Briefcase
+  Link as LinkIcon, Camera, Heart, User as UserIcon, Lock, Share, Settings, X, Briefcase,
+  LayoutGrid, Bookmark, Plus, MessageSquare
 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
@@ -12,6 +14,59 @@ import { useAuth } from "../context/AuthContext";
 import { getMediaUrl } from "../utils/media";
 import ContentModal from "../components/ContentModal";
 import toast from "react-hot-toast";
+
+// 🌌 AESTHETIC BACKGROUND (Floating Orbs & Aurora)
+const AestheticBackground = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {/* Shifting Aurora Spotlights */}
+        <motion.div 
+            animate={{ 
+                x: [-100, 100, -100],
+                y: [-50, 50, -50],
+                scale: [1, 1.2, 1]
+            }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-400/10 rounded-full blur-[120px]"
+        />
+        <motion.div 
+            animate={{ 
+                x: [100, -100, 100],
+                y: [50, -50, 50],
+                scale: [1.2, 1, 1.2]
+            }}
+            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-indigo-400/10 rounded-full blur-[120px]"
+        />
+
+        {/* Floating Glass Orbs */}
+        {[...Array(6)].map((_, i) => (
+            <motion.div
+                key={i}
+                initial={{ 
+                    x: `${Math.random() * 100}vw`, 
+                    y: `${Math.random() * 100}vh`,
+                    opacity: 0
+                }}
+                animate={{ 
+                    y: ["110vh", "-10vh"],
+                    x: [`${Math.random() * 100}vw`, `${Math.random() * 100}vw`],
+                    opacity: [0, 0.15, 0.15, 0]
+                }}
+                transition={{ 
+                    duration: Math.random() * 20 + 30, 
+                    repeat: Infinity, 
+                    ease: "linear",
+                    delay: -Math.random() * 30
+                }}
+                className="absolute rounded-full bg-white/5 border border-white/10 backdrop-blur-[4px] shadow-2xl"
+                style={{ 
+                    width: `${Math.random() * 200 + 100}px`,
+                    height: `${Math.random() * 200 + 100}px`
+                }}
+            />
+        ))}
+    </div>
+);
 
 export default function Profile() {
   const { user: authUser, updateUser } = useAuth();
@@ -139,185 +194,206 @@ export default function Profile() {
   const avatarUrl = getMediaUrl(profileData?.avatar, "avatar", profileData?.username);
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 pb-20 font-sans selection:bg-indigo-100">
-      
+    <div className="min-h-screen bg-mesh text-slate-900 pb-40 font-sans selection:bg-blue-100 relative overflow-x-hidden">
+      <AestheticBackground />
+
       {/* 📱 TOP NAVIGATION BAR */}
-      <header className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-xl border-b border-slate-100 h-14 z-50 flex items-center justify-between px-4">
+      <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-b border-blue-50 h-14 z-50 flex items-center justify-between px-4 shadow-sm">
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold tracking-tight lowercase">{profileData?.username}</h1>
-          <ChevronDown size={16} strokeWidth={2.5} />
+          <h1 className="text-lg font-black tracking-tighter text-slate-900 lowercase italic">
+            Uni<span className="text-blue-600">Connect</span>
+          </h1>
+          <div className="w-px h-4 bg-slate-200 mx-2" />
+          <span className="text-xs font-bold text-slate-500">{profileData?.username}</span>
         </div>
-        <div className="flex items-center gap-5">
-          <PlusSquare size={24} strokeWidth={2} className="cursor-pointer" onClick={() => navigate("/create")} />
-          <Settings size={24} strokeWidth={2} className="cursor-pointer" onClick={() => navigate("/settings")} />
+        <div className="flex items-center gap-4">
+          <Settings size={22} strokeWidth={2.5} className="cursor-pointer text-slate-600 hover:text-blue-600 transition-colors" onClick={() => navigate("/settings")} />
         </div>
       </header>
 
-      <main className="pt-20 px-4 max-w-2xl mx-auto">
+      <main className="max-w-4xl mx-auto pt-24 px-6 relative z-10">
         
-        {/* 👤 PROFILE HEADER */}
-        <div className="flex items-center gap-8 mb-6">
-          <div className="relative group cursor-pointer" onClick={() => fileInputRef.current?.click()}>
-            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-[3px] bg-gradient-to-tr from-indigo-100 to-indigo-500 group-hover:from-indigo-400 group-hover:to-indigo-600 transition-all duration-500">
-              <div className="w-full h-full rounded-full bg-white p-[2px] relative overflow-hidden">
-                <img 
-                  src={avatarUrl} 
-                  alt={profileData?.username}
-                  className="w-full h-full rounded-full object-cover bg-slate-50 transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                    <Camera size={20} className="text-white" />
+        {/* --- PROFILE HEADER CARD (INSTA-TECH BLEND) --- */}
+        <div className="bg-white rounded-[3rem] p-10 border border-blue-50 shadow-[0_20px_60px_rgba(0,0,0,0.03)] mb-12 relative overflow-hidden">
+            {/* Decorative inner glow */}
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl" />
+            
+            <div className="flex flex-col md:flex-row items-center gap-12 relative z-10">
+                {/* Avatar with Tech Border */}
+                <div className="relative group">
+                    <div className="absolute -inset-1 bg-gradient-to-tr from-blue-600 to-indigo-400 rounded-full animate-spin-slow opacity-20 group-hover:opacity-100 transition-opacity duration-700" />
+                    <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white overflow-hidden shadow-2xl bg-slate-50">
+                        <img 
+                            src={avatarUrl} 
+                            alt={profileData?.username} 
+                            className="w-full h-full object-cover"
+                        />
+                    </div>
+                    <button 
+                        onClick={() => fileInputRef.current?.click()}
+                        className="absolute bottom-2 right-2 w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center border-4 border-white shadow-xl hover:scale-110 transition-transform"
+                    >
+                        <Camera size={18} />
+                    </button>
+                    <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleAvatarChange} />
                 </div>
-              </div>
+
+                {/* Profile Identity & Stats */}
+                <div className="flex-1 flex flex-col gap-8 text-center md:text-left">
+                    <div>
+                        <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-4">
+                            <h2 className="text-3xl font-black text-slate-900 tracking-tight">{profileData?.name}</h2>
+                            <button 
+                                onClick={() => navigate("/settings")}
+                                className="px-6 py-2 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-black uppercase tracking-widest rounded-xl transition-all"
+                            >
+                                Edit System Node
+                            </button>
+                        </div>
+                        <p className="text-slate-500 font-medium leading-relaxed max-w-md">
+                            {profileData?.bio || "No mission statement defined for this node identity."}
+                        </p>
+                        <div className="flex items-center justify-center md:justify-start gap-1.5 text-blue-600 font-bold text-[10px] uppercase tracking-widest mt-4">
+                            <LinkIcon size={12} className="rotate-45" />
+                            <span className="hover:underline cursor-pointer">{profileData?.college?.name || "Independent Node"}</span>
+                        </div>
+                    </div>
+
+                    {/* Stats Dashboard Grid */}
+                    <div className="grid grid-cols-3 gap-4">
+                        <div className="bg-blue-50/50 border border-blue-100/50 p-4 rounded-2xl text-center hover:bg-blue-50 transition-colors cursor-default">
+                            <p className="text-xl font-black text-blue-600">{posts.length}</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Logs</p>
+                        </div>
+                        <div 
+                            onClick={() => setShowModal("followers")}
+                            className="bg-white border border-slate-100 p-4 rounded-2xl text-center hover:border-blue-200 hover:shadow-lg hover:shadow-blue-500/5 transition-all cursor-pointer"
+                        >
+                            <p className="text-xl font-black text-slate-900">{profileData?.followersCount || 0}</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Peers</p>
+                        </div>
+                        <div 
+                            onClick={() => setShowModal("following")}
+                            className="bg-white border border-slate-100 p-4 rounded-2xl text-center hover:border-blue-200 hover:shadow-lg hover:shadow-blue-500/5 transition-all cursor-pointer"
+                        >
+                            <p className="text-xl font-black text-slate-900">{profileData?.followingCount || 0}</p>
+                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Signals</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-            {uploading && (
-              <div className="absolute inset-0 bg-white/60 rounded-full flex items-center justify-center z-10">
-                <div className="w-6 h-6 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
-              </div>
-            )}
-            <input 
-              type="file" 
-              ref={fileInputRef} 
-              className="hidden" 
-              accept="image/*" 
-              onChange={handleAvatarChange} 
-            />
-          </div>
-
-          <div className="flex-1 flex justify-between px-2">
-            {[
-              { label: "Posts", value: posts.length, onClick: null },
-              { label: "Followers", value: profileData?.followersCount || 0, onClick: () => setShowModal('followers') },
-              { label: "Following", value: profileData?.followingCount || 0, onClick: () => setShowModal('following') }
-            ].map(stat => (
-              <div key={stat.label} className={`flex flex-col items-center ${stat.onClick ? 'cursor-pointer' : ''}`} onClick={stat.onClick}>
-                <span className="text-base font-bold text-slate-900">{stat.value}</span>
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{stat.label}</span>
-              </div>
-            ))}
-          </div>
         </div>
 
-        {/* 📝 BIO SECTION */}
-        <div className="mb-6 px-1">
-          <h2 className="text-sm font-black text-slate-900 mb-0.5">{profileData?.name}</h2>
-          <p className="text-sm text-slate-800 whitespace-pre-wrap leading-tight mb-2">
-            {profileData?.bio || "No bio signals detected."}
-          </p>
-          <div className="flex items-center gap-1.5 text-indigo-600 font-bold text-[10px] uppercase tracking-widest">
-            <LinkIcon size={12} className="rotate-45" />
-            <span className="hover:underline cursor-pointer">{profileData?.college?.name || "Independent Node"}</span>
-          </div>
+        {/* --- CONTENT NAVIGATION (TAB SWITCHER) --- */}
+        <div className="flex justify-center border-t border-blue-50 relative mb-12">
+            <div className="flex gap-12">
+                {[
+                    { id: "grid", label: "DATA LOGS", icon: LayoutGrid },
+                    { id: "management", label: "ADMIN SECTOR", icon: Briefcase },
+                    { id: "tagged", label: "SAVED NODES", icon: Bookmark }
+                ].map(tab => (
+                    <button
+                        key={tab.id}
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`flex items-center gap-2 py-4 border-t-2 transition-all duration-500 ${
+                            activeTab === tab.id 
+                            ? "border-blue-600 text-blue-600" 
+                            : "border-transparent text-slate-400 hover:text-slate-600"
+                        }`}
+                    >
+                        <tab.icon size={14} strokeWidth={3} />
+                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">{tab.label}</span>
+                    </button>
+                ))}
+            </div>
         </div>
 
-        {/* ⚙️ ACTION BUTTONS */}
-        <div className="flex gap-2 mb-10">
-          <button 
-            onClick={() => navigate("/settings")}
-            className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-900 py-2.5 rounded-xl text-[10px] font-black tracking-widest uppercase transition-all flex items-center justify-center gap-3 border border-slate-200"
-          >
-            Edit Settings
-          </button>
-          <button 
-            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-2.5 rounded-xl text-[10px] font-black tracking-widest uppercase transition-all flex items-center justify-center gap-3 shadow-lg shadow-indigo-100"
-          >
-            Share Node
-          </button>
-        </div>
-
-        {/* 📑 TABS SECTION */}
-        <div className="flex border-b border-slate-100">
-          {[
-            { id: "grid", icon: Grid },
-            { id: "reels", icon: Film },
-            { id: "management", icon: Briefcase },
-            { id: "tagged", icon: UserSquare2 }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`flex-1 flex justify-center py-3 relative ${activeTab === tab.id ? 'text-slate-900' : 'text-slate-300'}`}
-            >
-              <tab.icon size={22} strokeWidth={activeTab === tab.id ? 2.5 : 1.5} />
-              {activeTab === tab.id && (
-                <motion.div layoutId="activeTab" className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-slate-900" />
-              )}
-            </button>
-          ))}
-        </div>
-
-        {/* 🖼 CONTENT AREA */}
-        <div className="mt-0.5 min-h-[40vh]">
+        {/* --- CONTENT AREA --- */}
+        <div className="min-h-[40vh]">
           {activeTab === "management" ? (
-            <div className="space-y-6 pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {managementData.length > 0 ? (
                     managementData.map(event => (
-                        <div key={event._id} className="bg-white rounded-[2rem] border border-slate-100 p-6 shadow-sm">
+                        <div key={event._id} className="bg-white rounded-[2.5rem] border border-blue-50 p-8 shadow-sm hover:shadow-xl hover:shadow-blue-500/5 transition-all duration-500">
                             <div className="flex justify-between items-start mb-6">
                                 <div>
-                                    <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight">{event.title}</h3>
-                                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{new Date(event.created_at).toLocaleDateString()}</p>
+                                    <h3 className="text-base font-black text-slate-900 uppercase tracking-tight">{event.title}</h3>
+                                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{new Date(event.created_at).toLocaleDateString()}</p>
                                 </div>
-                                <span className="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[8px] font-black uppercase tracking-widest border border-indigo-100">{event.type}</span>
+                                <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-[8px] font-black uppercase tracking-widest border border-blue-100">{event.type}</span>
                             </div>
                             
-                            <div className="space-y-3">
-                                <h4 className="text-[8px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Applicant Nodes ({event.applicants?.length || 0})</h4>
+                            <div className="space-y-4">
+                                <h4 className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">Applicant Nodes ({event.applicants?.length || 0})</h4>
                                 {event.applicants?.length > 0 ? (
                                     <div className="flex flex-wrap gap-2">
                                         {event.applicants.map(app => (
                                             <Link 
                                                 key={app._id} 
                                                 to={`/user/${app.user?._id}`}
-                                                className="flex items-center gap-2 p-2 bg-slate-50 hover:bg-slate-100 rounded-xl transition-all border border-slate-100 group"
+                                                className="flex items-center gap-3 p-2 bg-slate-50 hover:bg-white hover:shadow-lg hover:shadow-blue-500/5 rounded-2xl transition-all border border-slate-100"
                                             >
-                                                <img src={getMediaUrl(app.user?.avatar, "avatar", app.user?.username)} className="w-6 h-6 rounded-lg object-cover" />
-                                                <div className="pr-1">
-                                                    <p className="text-[10px] font-black text-slate-800 leading-none mb-0.5">{app.user?.username}</p>
-                                                    <p className="text-[8px] font-bold text-slate-400 leading-none">{app.user?.name}</p>
+                                                <img src={getMediaUrl(app.user?.avatar, "avatar", app.user?.username)} className="w-8 h-8 rounded-xl object-cover" />
+                                                <div className="pr-2">
+                                                    <p className="text-[10px] font-black text-slate-800 leading-none mb-1">{app.user?.username}</p>
+                                                    <p className="text-[8px] font-bold text-slate-400 leading-none uppercase">{app.user?.name}</p>
                                                 </div>
                                             </Link>
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="py-4 text-center text-slate-300 text-[8px] font-black uppercase tracking-widest italic border border-dashed border-slate-100 rounded-xl">Zero signals detected</div>
+                                    <div className="py-6 text-center text-slate-300 text-[10px] font-black uppercase tracking-widest italic border border-dashed border-slate-100 rounded-[2rem]">Zero signals detected</div>
                                 )}
                             </div>
                         </div>
                     ))
                 ) : (
-                    <div className="py-32 text-center text-slate-300 uppercase text-[10px] font-black tracking-[0.4em] italic">No active management sectors</div>
+                    <div className="col-span-full py-32 text-center text-slate-300 uppercase text-[10px] font-black tracking-[0.4em] italic">No active management sectors</div>
                 )}
             </div>
           ) : (
-            /* POSTS GRID */
-            <div className="grid grid-cols-3 gap-0.5 mt-0.5">
+            /* POSTS GRID (UNIFIED LOGS/SAVED) */
+            <div className="grid grid-cols-3 gap-2 md:gap-8">
                 {profileLoading ? (
-                    [...Array(9)].map((_, i) => (
-                    <div key={i} className="aspect-square bg-slate-100 animate-pulse border border-white" />
+                    [...Array(6)].map((_, i) => (
+                    <div key={i} className="aspect-square bg-white rounded-[2rem] animate-pulse border border-slate-50 shadow-sm" />
                     ))
                 ) : (
-                    (activeTab === "grid" ? posts : savedPosts).length > 0 ? (
+                    (activeTab === "grid" || activeTab === "tagged" ? (activeTab === "grid" ? posts : savedPosts) : []).length > 0 ? (
                     (activeTab === "grid" ? posts : savedPosts).map(post => (
                         <motion.div 
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            whileHover={{ y: -8 }}
                             key={post._id} 
-                            className="aspect-square bg-slate-50 relative group cursor-pointer overflow-hidden" 
+                            className="aspect-square bg-white rounded-[1.5rem] md:rounded-[3rem] relative group cursor-pointer overflow-hidden border border-blue-50 shadow-sm hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500" 
                             onClick={() => setSelectedContent(post)}
                         >
                         {post.image ? (
-                            <img src={getMediaUrl(post.image)} className="w-full h-full object-cover" alt="" />
+                            <img src={getMediaUrl(post.image)} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt="" />
                         ) : (
-                            <div className="w-full h-full flex items-center justify-center p-2 text-center text-[8px] text-slate-300 font-black uppercase bg-slate-50">
-                            {post.content?.substring(0, 30)}...
+                            <div className="w-full h-full flex items-center justify-center p-6 text-center text-[10px] text-slate-400 font-bold leading-relaxed bg-slate-50 italic">
+                                {post.content?.substring(0, 80)}...
                             </div>
                         )}
+                        {/* Insta-style Stats Overlay */}
+                        <div className="absolute inset-0 bg-blue-600/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-6 text-white backdrop-blur-[2px]">
+                            <div className="flex items-center gap-2">
+                                <Heart size={20} fill="currentColor" />
+                                <span className="font-black text-sm">{post.likes?.length || 0}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <MessageSquare size={20} fill="currentColor" />
+                                <span className="font-black text-sm">{post.comments?.length || 0}</span>
+                            </div>
+                        </div>
                         </motion.div>
                     ))
                     ) : (
-                    <div className="col-span-3 py-32 text-center text-slate-300 uppercase text-[10px] font-black tracking-[0.4em] italic">
-                        Zero data detected
+                    <div className="col-span-full py-32 text-center bg-white/50 rounded-[4rem] border border-dashed border-blue-100 shadow-sm">
+                        <Plus size={40} className="mx-auto text-blue-200 mb-4" />
+                        <h3 className="text-lg font-black text-slate-900 tracking-tight mb-1">Zero data detected</h3>
+                        <p className="text-slate-400 text-[10px] font-black uppercase tracking-widest">Node history is currently empty</p>
                     </div>
                     )
                 )}

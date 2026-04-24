@@ -16,15 +16,38 @@ const itemVariants = {
   show: { opacity: 1, y: 0 },
 };
 
+// 🧠 NEURAL MESH ANIMATION
+const NeuralMesh = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {[...Array(15)].map((_, i) => (
+            <motion.div
+                key={i}
+                animate={{ 
+                    x: [Math.random() * 100 + "vw", Math.random() * 100 + "vw"],
+                    y: [Math.random() * 100 + "vh", Math.random() * 100 + "vh"],
+                }}
+                transition={{ 
+                    duration: Math.random() * 20 + 20, 
+                    repeat: Infinity, 
+                    ease: "linear" 
+                }}
+                className="absolute w-1 h-1 bg-blue-400/20 rounded-full"
+            >
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-[1px] bg-blue-500/5 rotate-45" />
+            </motion.div>
+        ))}
+    </div>
+);
+
 const About = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-darkBg via-black to-darkBg text-white p-6">
-
+    <div className="min-h-screen bg-mesh text-slate-900 p-6 relative overflow-hidden selection:bg-blue-100">
+      <NeuralMesh />
       <Motion.div
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className="max-w-3xl mx-auto text-center"
+        className="max-w-3xl mx-auto text-center relative z-10 pt-20"
       >
 
         {/* Icon */}

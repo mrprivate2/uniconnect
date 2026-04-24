@@ -27,6 +27,30 @@ import { getMediaUrl } from "../utils/media";
 import toast from "react-hot-toast";
 import ContentModal from "../components/ContentModal";
 
+// 🛰️ HIGH-TECH UPLINK ANIMATION
+const SatelliteUplink = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+            className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] border border-blue-500/10 rounded-full"
+        >
+            <motion.div 
+                animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }}
+                transition={{ duration: 4, repeat: Infinity }}
+                className="absolute top-1/2 left-0 w-3 h-3 bg-blue-500 rounded-full shadow-[0_0_15px_#3b82f6]" 
+            />
+        </motion.div>
+        <motion.div 
+            animate={{ rotate: -360 }}
+            transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+            className="absolute bottom-[-5%] left-[-5%] w-[400px] h-[400px] border border-indigo-500/10 rounded-full"
+        >
+            <div className="absolute top-0 left-1/2 w-2 h-2 bg-indigo-500 rounded-full opacity-40" />
+        </motion.div>
+    </div>
+);
+
 export default function Feed() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -209,7 +233,8 @@ export default function Feed() {
   );
 
   return (
-    <div className="min-h-screen pt-10 pb-40 px-4 flex flex-col items-center space-y-8 bg-mesh">
+    <div className="min-h-screen pt-10 pb-40 px-4 flex flex-col items-center space-y-8 bg-mesh relative">
+      <SatelliteUplink />
       
       {/* SEARCH & TABS */}
       <div className="w-full max-w-xl flex flex-col gap-6">

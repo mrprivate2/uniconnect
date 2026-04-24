@@ -7,7 +7,7 @@
 :root {
   --primary: #4F46E5;
   --secondary: #0EA5E9;
-  --background: #F8FAFC;
+  --background: #eff6ff;
   --text-main: #0F172A;
   --text-muted: #64748B;
 }
@@ -35,7 +35,7 @@ body {
 }
 
 .input-premium {
-  @apply w-full px-6 py-4 rounded-2xl bg-slate-50 border border-transparent focus:bg-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500/30 transition-all outline-none text-slate-900 font-medium;
+  @apply w-full px-6 py-4 rounded-2xl bg-slate-50 border border-transparent focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/30 transition-all outline-none text-slate-900 font-medium;
 }
 
 .btn-premium {
@@ -43,7 +43,7 @@ body {
 }
 
 .btn-indigo {
-  @apply bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-500/20;
+  @apply bg-blue-600 text-white hover:bg-blue-700 shadow-blue-500/20;
 }
 
 /* --- Utilities --- */
@@ -58,14 +58,18 @@ body {
 }
 
 .text-gradient {
-  @apply bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-sky-500;
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-500;
 }
 
 .bg-mesh {
-  background-color: #f8fafc;
+  background-color: #eff6ff;
   background-image: 
-    radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.05) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(14, 165, 233, 0.05) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.05) 0px, transparent 50%),
-    radial-gradient(at 0% 100%, rgba(79, 70, 229, 0.05) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(30, 64, 175, 0.05) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
+}
+
+.bg-light-blue {
+  background-color: #eff6ff;
 }

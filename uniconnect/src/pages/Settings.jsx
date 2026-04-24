@@ -5,6 +5,25 @@ import axios from "axios";
 import API_BASE_URL from "../api";
 import { useAuth } from "../context/AuthContext";
 
+// 🛠️ HARDWARE CIRCUITRY ANIMATION
+const Circuitry = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-[0.03]">
+        <svg width="100%" height="100%">
+            <pattern id="circuit" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+                <path d="M0 50 H30 L50 20 H100 M50 20 V0 M30 50 L10 80 H0" stroke="currentColor" strokeWidth="1" fill="none" className="text-blue-600" />
+                <circle cx="50" cy="20" r="2" fill="currentColor" />
+                <circle cx="30" cy="50" r="2" fill="currentColor" />
+            </pattern>
+            <rect width="100%" height="100%" fill="url(#circuit)" />
+        </svg>
+        <motion.div 
+            animate={{ opacity: [0.1, 0.3, 0.1] }}
+            transition={{ duration: 4, repeat: Infinity }}
+            className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-blue-500/5 to-transparent"
+        />
+    </div>
+);
+
 export default function Settings() {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState("profile");
@@ -81,9 +100,9 @@ export default function Settings() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pb-40 font-sans bg-mesh text-slate-900">
-      
-      <div className="max-w-[1200px] mx-auto p-8 md:p-16 lg:pt-24">
+    <div className="min-h-screen pb-40 font-sans bg-mesh text-slate-900 relative overflow-hidden selection:bg-blue-100">
+      <Circuitry />
+      <div className="max-w-[1200px] mx-auto p-8 md:p-16 lg:pt-24 relative z-10">
         
         {/* HEADER SECTION */}
         <header className="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">

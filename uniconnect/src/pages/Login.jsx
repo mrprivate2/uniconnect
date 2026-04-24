@@ -101,10 +101,10 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="min-h-screen w-full flex font-sans selection:bg-indigo-100 bg-mesh text-slate-900">
+    <div className="h-screen w-full flex font-sans selection:bg-indigo-100 bg-mesh text-slate-900 overflow-hidden">
       
       {/* LEFT SIDE - Premium Hero */}
-      <div className="hidden lg:flex w-1/2 bg-white sticky top-0 h-screen items-center justify-center p-20 overflow-hidden border-r border-slate-100 flex-shrink-0">
+      <div className="hidden lg:flex w-1/2 bg-white sticky top-0 h-full items-center justify-center p-20 overflow-hidden border-r border-slate-100 flex-shrink-0">
         <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
         
         <div className="relative z-10 max-w-lg">
@@ -147,7 +147,7 @@ export default function Login({ onLogin }) {
       </div>
 
       {/* RIGHT SIDE - Refined Auth Form */}
-      <div className="flex-1 flex flex-col items-center justify-start p-8 pt-12 md:pt-24">
+      <div className="flex-1 h-full flex flex-col items-center justify-start p-8 pt-12 md:pt-24 overflow-y-auto no-scrollbar">
         <motion.div 
           layout
           className="w-full max-w-[440px] bg-white rounded-[3rem] p-10 shadow-[0_20px_70px_rgba(0,0,0,0.03)] border border-slate-100"

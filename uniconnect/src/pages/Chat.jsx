@@ -15,6 +15,27 @@ import { getMediaUrl } from "../utils/media";
 // Lightweight Technical Emoji Hub
 const EMOJI_SET = ["⚡", "🔒", "🔐", "🛡️", "🛰️", "💻", "🔥", "🚀", "🎯", "✨", "📡", "✅", "⚠️", "🚫", "🧠", "👋", "😊", "😂", "👍", "🙌", "❤️", "💎"];
 
+// 🔒 ENCRYPTED PULSE ANIMATION
+const EncryptedPulse = () => (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        {[...Array(3)].map((_, i) => (
+            <motion.div
+                key={i}
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 2, opacity: [0, 0.1, 0] }}
+                transition={{ 
+                    duration: 4, 
+                    repeat: Infinity, 
+                    delay: i * 1.5,
+                    ease: "easeOut"
+                }}
+                className="absolute bottom-[-10%] left-[-10%] w-[400px] h-[400px] border-2 border-blue-400/20 rounded-full"
+            />
+        ))}
+        <div className="absolute bottom-10 left-10 w-4 h-4 bg-blue-500 rounded-full blur-md animate-pulse" />
+    </div>
+);
+
 export default function Chat() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -188,8 +209,9 @@ export default function Chat() {
   );
 
   return (
-    <div className="h-[calc(100vh-45px)] w-full flex font-sans bg-mesh text-slate-900 overflow-hidden relative">
-        <div className={`w-full lg:w-[380px] border-r border-slate-100 bg-white flex flex-col shrink-0 relative z-20 ${selectedUser ? 'hidden lg:flex' : 'flex'}`}>
+    <div className="h-[calc(100vh-45px)] w-full flex font-sans bg-mesh text-slate-900 overflow-hidden relative selection:bg-blue-100">
+        <EncryptedPulse />
+        <div className={`w-full lg:w-[380px] border-r border-blue-50 bg-white/80 backdrop-blur-xl flex flex-col shrink-0 relative z-20 ${selectedUser ? 'hidden lg:flex' : 'flex'}`}>
             <div className="p-8 pb-6">
                 <div className="flex items-center justify-between mb-8">
                     <div>
