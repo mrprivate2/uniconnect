@@ -126,14 +126,19 @@ const allowedOrigins = [
   process.env.CLIENT_URL,
   "http://localhost:5173",
   "http://localhost:3000",
-  "https://uniconnect-iy6ox3y49-mrprivate2s-projects.vercel.app"
 ].filter(Boolean);
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // allow requests with no origin (like mobile apps or curl requests)
+    // 1. Allow if no origin (like mobile apps/curl)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) !== -1 || allowedOrigins.includes("*")) {
+
+    // 2. Check if it's in our allowed list or is a Vercel deployment
+    const isAllowed = allowedOrigins.includes(origin) || 
+                      origin.endsWith(".vercel.app") || 
+                      allowedOrigins.includes("*");
+
+    if (isAllowed) {
       callback(null, true);
     } else {
       console.error(`❌ CORS Error: Origin ${origin} not allowed by config.`);
