@@ -2,8 +2,9 @@ import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
+import API_BASE_URL from "../api";
 
-const API = "http://localhost:5001";
+const API = API_BASE_URL.replace("/api", "");
 
 export default function PersonalChat() {
   const { name } = useParams();

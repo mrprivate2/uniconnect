@@ -1,12 +1,21 @@
 import "./config/loadEnv.js";
 // ✅ Validate Environment Variables
-const requiredEnvVars = ["VITE_SUPABASE_URL", "VITE_SUPABASE_ANON_KEY", "JWT_SECRET"];
-requiredEnvVars.forEach((varName) => {
-  if (!process.env[varName]) {
-    console.error(`❌ CRITICAL ERROR: Missing environment variable ${varName}`);
+const validateEnv = () => {
+  const url = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY;
+  const jwtSecret = process.env.JWT_SECRET;
+
+  const missing = [];
+  if (!url) missing.push("VITE_SUPABASE_URL or SUPABASE_URL");
+  if (!key) missing.push("VITE_SUPABASE_ANON_KEY or SUPABASE_ANON_KEY");
+  if (!jwtSecret) missing.push("JWT_SECRET");
+
+  if (missing.length > 0) {
+    console.error(`❌ CRITICAL ERROR: Missing environment variables: ${missing.join(", ")}`);
     process.exit(1);
   }
-});
+};
+validateEnv();
 
 import express from "express";
 import cors from "cors";

@@ -6,6 +6,7 @@ import {
   Image, Send, X, Sparkles,
   Globe, Lock
 } from "lucide-react";
+import API_BASE_URL from "../api";
 
 export default function Create() {
   const [type] = useState("post");
@@ -22,7 +23,7 @@ export default function Create() {
   const navigate = useNavigate();
 
   // ✅ use env (production ready)
-  const API = import.meta.env.VITE_API_URL || "http://localhost:5001";
+  const API = API_BASE_URL;
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
