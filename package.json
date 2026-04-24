@@ -1,0 +1,19 @@
+{
+  "name": "unicode",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix uniconnect-backend\" \"npm run dev --prefix uniconnect\"",
+    "start": "node uniconnect-backend/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.104.1",
+    "concurrently": "^9.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.1.1"
+  }
+}
