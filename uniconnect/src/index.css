@@ -12,6 +12,12 @@
   --text-muted: #64748B;
 }
 
+.dark {
+  --background: #0c0f1a;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+}
+
 body {
   background-color: var(--background);
   color: var(--text-main);
@@ -22,20 +28,31 @@ body {
 
 /* --- Premium Glassmorphism --- */
 .glass {
-  @apply bg-white/70 backdrop-blur-2xl border border-white/40;
+  @apply bg-white/70 backdrop-blur-2xl border border-white/40 dark:bg-slate-900/70 dark:border-slate-700/40;
 }
 
 .glass-dark {
-  @apply bg-slate-900/10 backdrop-blur-2xl border border-black/5;
+  @apply bg-slate-900/10 backdrop-blur-2xl border border-black/5 dark:bg-white/5 dark:border-white/10;
+}
+
+/* --- Smooth Theme Transition --- */
+*, *::before, *::after {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    transition: none !important;
+  }
 }
 
 /* --- Custom Components --- */
 .card-premium {
-  @apply bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-500;
+  @apply bg-white rounded-[2.5rem] border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] transition-all duration-500 dark:bg-slate-900 dark:border-slate-700 dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] dark:hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)];
 }
 
 .input-premium {
-  @apply w-full px-6 py-4 rounded-2xl bg-slate-50 border border-transparent focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/30 transition-all outline-none text-slate-900 font-medium;
+  @apply w-full px-6 py-4 rounded-2xl bg-slate-50 border border-transparent focus:bg-white focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500/30 transition-all outline-none text-slate-900 font-medium dark:bg-slate-800 dark:text-slate-100 dark:focus:bg-slate-700;
 }
 
 .btn-premium {
@@ -54,7 +71,7 @@ body {
   background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors;
+  @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors dark:bg-slate-700 dark:hover:bg-slate-600;
 }
 
 .text-gradient {
@@ -70,6 +87,24 @@ body {
     radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
 }
 
+.dark .bg-mesh {
+  background-color: #0c0f1a;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(30, 64, 175, 0.03) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(59, 130, 246, 0.05) 0px, transparent 50%);
+}
+
 .bg-light-blue {
   background-color: #eff6ff;
+}
+
+.dark .bg-light-blue {
+  background-color: #0f172a;
+}
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  @apply bg-slate-700;
 }

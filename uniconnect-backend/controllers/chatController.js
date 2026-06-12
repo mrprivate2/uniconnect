@@ -66,3 +66,46 @@ export const uploadChatMedia = catchAsync(async (req, res) => {
 
   res.json({ ...newMessage, _id: newMessage.id });
 });
+
+/* =========================
+   ✅ GET CONVERSATIONS
+========================= */
+export const getConversations = catchAsync(async (req, res) => {
+  const userId = req.user.id;
+
+  // This is a bit complex in Supabase without a dedicated conversations table
+  // We'll get all messages where the user is either sender or receiver
+  const { data: messages, error } = await supabase
+    .from("messages")
+    .select(`
+      id, text, created_at, image,
+      sender:users!messages_sender_id_fkey(id, name, username, avatar),
+      receiver:users!messages_receiver_id_fkey(id, name, username, avatar)
+    `)
+    .or(`sender_id.eq.${userId},receiver_id.eq.${userId}`)
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  // Group by the "other" user
+  const conversationMap = new Map();
+
+  messages.forEach(msg => {
+    const otherUser = msg.sender.id === userId ? msg.receiver : msg.sender;
+    if (!otherUser) return;
+    
+    if (!conversationMap.has(otherUser.id)) {
+      conversationMap.set(otherUser.id, {
+        _id: otherUser.id,
+        user: { ...otherUser, _id: otherUser.id },
+        lastMessage: {
+          text: msg.text,
+          time: msg.created_at,
+          image: msg.image
+        }
+      });
+    }
+  });
+
+  res.json(Array.from(conversationMap.values()));
+});

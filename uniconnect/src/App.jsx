@@ -12,6 +12,7 @@ import { useAuth } from "./context/AuthContext";
 
 // Pages
 import Login from "./pages/Login";
+import ResetPassword from "./pages/ResetPassword";
 import SelectCollege from "./pages/SelectCollege";
 import Feed from "./pages/Feed";
 import Profile from "./pages/Profile";
@@ -41,7 +42,7 @@ function AppContent() {
     if (userData.role === "admin") {
       navigate("/admin/dashboard");
     } else if (isNew) {
-      navigate("/settings");
+      navigate("/select-college");
     } else if (userData.college || userData.college_id) {
       navigate("/feed");
     } else {
@@ -73,6 +74,7 @@ function AppContent() {
       <Routes location={location} key={location.pathname}>
         {/* PUBLIC ROUTES */}
         <Route path="/" element={<Login onLogin={handleLogin} />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         
         {/* SEMI-PROTECTED (Login required, but no layout yet) */}
         <Route

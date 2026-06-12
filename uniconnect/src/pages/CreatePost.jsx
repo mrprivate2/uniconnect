@@ -101,10 +101,10 @@ export default function CreatePost() {
   const categories = ["Technology", "Design", "Business", "Research", "Leisure"];
 
   return (
-    <div className="h-screen w-full flex flex-col lg:flex-row bg-[#F8FAFC] font-sans bg-mesh overflow-hidden">
+    <div className="h-screen w-full flex flex-col lg:flex-row bg-[#F8FAFC] dark:bg-[#0c0f1a] font-sans bg-mesh overflow-hidden dark:text-slate-100">
       
       {/* COMPACT SIDEBAR: System Status */}
-      <div className="w-full lg:w-[320px] bg-slate-900 flex flex-col justify-between p-8 text-white relative shrink-0">
+      <div className="w-full lg:w-[320px] bg-slate-900 dark:bg-slate-950 flex flex-col justify-between p-8 text-white relative shrink-0">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.1),transparent)]" />
         
         <div className="relative z-10">
@@ -169,11 +169,11 @@ export default function CreatePost() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.99 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-2xl bg-white rounded-[2.5rem] p-8 lg:p-10 shadow-[0_20px_80px_rgba(0,0,0,0.02)] border border-slate-100 relative max-h-[90vh] overflow-y-auto custom-scrollbar"
+            className="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 lg:p-10 shadow-[0_20px_80px_rgba(0,0,0,0.02)] dark:shadow-[0_20px_80px_rgba(0,0,0,0.3)] border border-slate-100 dark:border-slate-700 relative max-h-[90vh] overflow-y-auto custom-scrollbar"
           >
             <div className="flex justify-between items-center mb-8 px-1">
                 <div>
-                    <h2 className="text-xl font-black text-slate-900 tracking-tight mb-0.5">Transmission Hub</h2>
+                    <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-0.5">Transmission Hub</h2>
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest">Global Synchronization Mode</p>
                 </div>
                 <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-slate-300 border border-slate-100">
@@ -182,7 +182,7 @@ export default function CreatePost() {
             </div>
 
             {/* COMPACT TYPE TABS */}
-            <div className="flex gap-1.5 mb-8 bg-slate-50/80 p-1 rounded-xl border border-slate-100/50">
+            <div className="flex gap-1.5 mb-8 bg-slate-50/80 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-100/50 dark:border-slate-700/50">
                 {[
                     { id: "thought", label: "THOUGHT", icon: MessageSquare },
                     { id: "event", label: "EVENT", icon: Calendar },
@@ -226,7 +226,7 @@ export default function CreatePost() {
                                     placeholder={type === 'rent' ? "Artifact ID" : type === 'thought' ? "Thought Header" : "Transmission Title"}
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
-                                    className="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-xs font-bold text-slate-700 outline-none focus:bg-white focus:ring-4 focus:ring-indigo-500/5 transition-all shadow-sm"
+                                    className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl px-5 py-3 text-xs font-bold text-slate-700 dark:text-slate-200 outline-none focus:bg-white dark:focus:bg-slate-700 focus:ring-4 focus:ring-indigo-500/5 transition-all shadow-sm dark:shadow-slate-900"
                                 />
                             </div>
 
@@ -257,7 +257,7 @@ export default function CreatePost() {
                                             required
                                             value={eventDate}
                                             onChange={(e) => setEventDate(e.target.value)}
-                                            className="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-xs font-bold text-slate-700 outline-none focus:bg-white focus:ring-4 focus:ring-indigo-500/5 transition-all shadow-sm"
+                                            className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl px-5 py-3 text-xs font-bold text-slate-700 dark:text-slate-200 outline-none focus:bg-white dark:focus:bg-slate-700 focus:ring-4 focus:ring-indigo-500/5 transition-all shadow-sm dark:shadow-slate-900"
                                         />
                                     </div>
                                     <div className="relative">
@@ -283,7 +283,7 @@ export default function CreatePost() {
                                     <select 
                                         value={category}
                                         onChange={(e) => setCategory(e.target.value)}
-                                        className="w-full bg-slate-50 border border-slate-100 rounded-xl px-5 py-3 text-xs font-bold text-slate-700 outline-none focus:bg-white focus:ring-4 focus:ring-indigo-500/5 transition-all shadow-sm"
+                                        className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-xl px-5 py-3 text-xs font-bold text-slate-700 dark:text-slate-200 outline-none focus:bg-white dark:focus:bg-slate-700 focus:ring-4 focus:ring-indigo-500/5 transition-all shadow-sm dark:shadow-slate-900"
                                     >
                                         {categories.map(c => <option key={c} value={c}>{c}</option>)}
                                     </select>

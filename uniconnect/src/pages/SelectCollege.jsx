@@ -86,7 +86,7 @@ export default function SelectCollege({ onSelect }) {
       const token = localStorage.getItem("token");
       if (user?.isGuest || !token) {
         updateUser({ college: selected.name, college_id: selected._id });
-        onSelect(selected.name);
+        onSelect(selected);
         navigate("/feed");
         return;
       }
@@ -97,17 +97,17 @@ export default function SelectCollege({ onSelect }) {
           headers: { Authorization: `Bearer ${token}` }
         });
         updateUser({ college: res.data.college, college_id: res.data.college });
-        onSelect(selected.name);
+        onSelect(selected);
         navigate("/feed");
       } catch (err) {
-        onSelect(selected.name);
+        onSelect(selected);
         navigate("/feed");
       }
     }
   };
 
   return (
-    <div className="flex h-screen w-full overflow-hidden font-sans selection:bg-blue-100 bg-mesh text-slate-900 relative">
+    <div className="flex h-screen w-full overflow-hidden font-sans selection:bg-blue-100 dark:selection:bg-blue-900/50 bg-mesh text-slate-900 dark:text-slate-100 relative">
       
       {/* 🛸 STEALTH INTERCEPTOR ANIMATIONS */}
       <StealthDrone delay={0} />
@@ -136,7 +136,7 @@ export default function SelectCollege({ onSelect }) {
       </div>
 
       {/* LEFT PANEL */}
-      <div className="hidden lg:flex w-[400px] bg-white/80 backdrop-blur-xl relative flex-col justify-between p-12 overflow-hidden border-r border-blue-50 shrink-0 z-10 shadow-2xl">
+      <div className="hidden lg:flex w-[400px] bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl relative flex-col justify-between p-12 overflow-hidden border-r border-blue-50 dark:border-slate-800 shrink-0 z-10 shadow-2xl dark:shadow-slate-900">
         <div className="absolute top-0 left-0 w-full h-full opacity-[0.02] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
         
         <div className="relative z-10">
@@ -156,7 +156,7 @@ export default function SelectCollege({ onSelect }) {
                 Network Authorization
             </div>
             
-            <h1 className="text-4xl font-black text-slate-900 leading-[1.1] tracking-tight mb-6">
+            <h1 className="text-4xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tight mb-6">
               Identify your<br />
               <span className="text-blue-600">Campus Hub.</span>
             </h1>
@@ -168,7 +168,7 @@ export default function SelectCollege({ onSelect }) {
         </div>
 
         <div className="relative z-10">
-            <div className="p-6 bg-white/50 rounded-[2rem] border border-blue-50">
+            <div className="p-6 bg-white/50 dark:bg-slate-900/50 rounded-[2rem] border border-blue-50 dark:border-slate-700">
                 <div className="flex items-center gap-4 mb-4">
                     <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center shadow-sm border border-slate-100">
                         <Sparkles className="text-blue-600" size={14} />
@@ -188,14 +188,14 @@ export default function SelectCollege({ onSelect }) {
       {/* RIGHT PANEL */}
       <div className="flex-1 flex flex-col items-center justify-center p-8 relative z-10 overflow-y-auto no-scrollbar">
         <motion.div 
-          className="w-full max-w-[480px] bg-white rounded-[3rem] p-10 shadow-[0_30px_100px_rgba(0,0,0,0.02)] border border-blue-50"
+          className="w-full max-w-[480px] bg-white dark:bg-slate-900 rounded-[3rem] p-10 shadow-[0_30px_100px_rgba(0,0,0,0.02)] dark:shadow-[0_30px_100px_rgba(0,0,0,0.3)] border border-blue-50 dark:border-slate-700"
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
         >
           <div className="mb-10 flex justify-between items-end">
             <div>
-                <h2 className="text-2xl font-black text-slate-900 tracking-tight mb-1">Node Selection</h2>
+                <h2 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-1">Node Selection</h2>
                 <p className="text-slate-400 text-xs font-bold uppercase tracking-widest">Access University Hub</p>
             </div>
             <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-600 border border-blue-100">
@@ -210,7 +210,7 @@ export default function SelectCollege({ onSelect }) {
               placeholder="Filter by name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-100 rounded-2xl py-4 pl-12 pr-6 text-sm text-slate-900 font-bold outline-none focus:bg-white focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/20 transition-all shadow-sm"
+              className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl py-4 pl-12 pr-6 text-sm text-slate-900 dark:text-white font-bold outline-none focus:bg-white dark:focus:bg-slate-700 focus:ring-4 focus:ring-blue-500/5 focus:border-blue-500/20 transition-all shadow-sm dark:shadow-slate-900"
             />
           </div>
 
@@ -229,8 +229,8 @@ export default function SelectCollege({ onSelect }) {
                     onClick={() => setSelected(college)}
                     className={`w-full flex items-center justify-between py-4 px-6 rounded-2xl border-2 transition-all duration-300 ${
                       selected?._id === college._id
-                        ? "border-blue-600 bg-blue-600 text-white shadow-xl shadow-blue-100"
-                        : "border-transparent bg-slate-50 hover:bg-slate-100/50 text-slate-500"
+                        ? "border-blue-600 bg-blue-600 text-white shadow-xl shadow-blue-100 dark:shadow-blue-900"
+                        : "border-transparent bg-slate-50 dark:bg-slate-800 hover:bg-slate-100/50 dark:hover:bg-slate-700/50 text-slate-500 dark:text-slate-300"
                     }`}
                   >
                     <div className="flex items-center gap-4">

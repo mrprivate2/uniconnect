@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
+import { motion, AnimatePresence } from "framer-motion";  import { 
   Search, MessageSquare, Send, ArrowLeft, 
   MoreVertical, Image as ImageIcon, Smile,
-  ShieldCheck, Lock, Zap, Clock, Info, Globe, ChevronRight, CheckCheck, Plus, X, Camera, Paperclip
+  Lock, Zap, Clock, Info, Globe, ChevronRight, CheckCheck, Plus, X, Camera, Paperclip
 } from "lucide-react";
 import { io } from "socket.io-client";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import API_BASE_URL from "../api";
 import { useAuth } from "../context/AuthContext";
 import { getMediaUrl } from "../utils/media";
+import { encryptMessage, decryptMessage } from "../utils/crypto";
 
 // Lightweight Technical Emoji Hub
 const EMOJI_SET = ["⚡", "🔒", "🔐", "🛡️", "🛰️", "💻", "🔥", "🚀", "🎯", "✨", "📡", "✅", "⚠️", "🚫", "🧠", "👋", "😊", "😂", "👍", "🙌", "❤️", "💎"];
@@ -55,6 +55,11 @@ export default function Chat() {
   const [isUploading, setIsUploading] = useState(false);
   const scrollRef = useRef(null);
   const fileInputRef = useRef(null);
+  // Cache recipient public keys to avoid refetching
+  const publicKeyCache = useRef({});
+  
+  // Own private key
+  const myPrivateKey = localStorage.getItem(`private_key_${user?._id}`);
 
   const token = localStorage.getItem("token");
   const API = API_BASE_URL.replace("/api", "");
@@ -72,9 +77,15 @@ export default function Chat() {
     
     s.on("receive_message", (msg) => {
         if (msg.senderId === selectedUserRef.current?._id || msg.receiverId === selectedUserRef.current?._id) {
+            const decryptedMsg = { ...msg };
+            if (msg.text && msg.text.startsWith("E2EE:")) {
+                decryptedMsg.isEncrypted = true;
+            }
             setMessages(prev => {
-                if (prev.find(m => m._id === msg._id)) return prev;
-                return [...prev, msg];
+                // 🔥 Replace optimistic message with real one (avoid duplicates)
+                const filtered = prev.filter(m => !(m.isOptimistic && m.text === msg.text && m.senderId === msg.senderId));
+                if (filtered.find(m => m._id === msg._id)) return filtered;
+                return [...filtered, decryptedMsg];
             });
         }
     });
@@ -130,7 +141,8 @@ export default function Chat() {
                     ...m,
                     senderId: m.sender_id,
                     receiverId: m.receiver_id,
-                    time: m.created_at
+                    time: m.created_at,
+                    isEncrypted: m.text && m.text.startsWith("E2EE:")
                 }));
                 setMessages(formatted);
             } catch (err) {
@@ -162,11 +174,70 @@ export default function Chat() {
     }
   };
 
-  const sendMessage = () => {
+  // Decrypt a single message if it's E2EE encrypted
+  const decryptMessageText = async (text) => {
+    if (!text || !text.startsWith("E2EE:")) return text;
+    if (!myPrivateKey) return "🔒 [Encrypted — missing private key]";
+    try {
+      const payload = JSON.parse(text.slice(5));
+      return await decryptMessage(payload, myPrivateKey);
+    } catch (err) {
+      console.error("Failed to decrypt message:", err);
+      return "🔒 [Decryption failed]";
+    }
+  };
+
+  // Encrypt a message for the recipient
+  const encryptMessageText = async (plaintext, recipientId) => {
+    if (!recipientId) return plaintext;
+    
+    // Check cache first
+    if (!publicKeyCache.current[recipientId]) {
+      try {
+        const res = await axios.get(`${API_BASE_URL}/users/${recipientId}/public-key`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const pubKey = res.data.publicKey;
+        if (!pubKey) {
+          console.warn("No public key found for recipient. Sending unencrypted.");
+          return plaintext;
+        }
+        publicKeyCache.current[recipientId] = pubKey;
+      } catch (err) {
+        console.warn("Failed to fetch public key. Sending unencrypted.", err);
+        return plaintext;
+      }
+    }
+    
+    try {
+      const payload = await encryptMessage(plaintext, publicKeyCache.current[recipientId]);
+      return "E2EE:" + JSON.stringify(payload);
+    } catch (err) {
+      console.error("Encryption failed, sending plaintext:", err);
+      return plaintext;
+    }
+  };
+
+  const sendMessage = async () => {
     if (!newMessage.trim() || !socket || !selectedUser) return;
+    
+    const textToSend = await encryptMessageText(newMessage, selectedUser._id);
+    
+    // 🚀 Optimistic UI — add message instantly (WhatsApp-style)
+    const optimisticMsg = {
+      _id: `opt-${Date.now()}-${Math.random()}`,
+      senderId: user?._id,
+      receiverId: selectedUser._id,
+      text: textToSend,
+      time: new Date().toISOString(),
+      isEncrypted: textToSend.startsWith("E2EE:"),
+      isOptimistic: true
+    };
+    setMessages(prev => [...prev, optimisticMsg]);
+    
     socket.emit("send_message", {
         receiverId: selectedUser._id,
-        text: newMessage
+        text: textToSend
     });
     setNewMessage("");
     setIsTyping(false);
@@ -209,17 +280,17 @@ export default function Chat() {
   );
 
   return (
-    <div className="h-[calc(100vh-45px)] w-full flex font-sans bg-mesh text-slate-900 overflow-hidden relative selection:bg-blue-100">
+    <div className="h-[calc(100vh-45px)] w-full flex font-sans bg-mesh text-slate-900 dark:text-slate-100 overflow-hidden relative selection:bg-blue-100 dark:selection:bg-blue-900/50">
         <EncryptedPulse />
-        <div className={`w-full lg:w-[380px] border-r border-blue-50 bg-white/80 backdrop-blur-xl flex flex-col shrink-0 relative z-20 ${selectedUser ? 'hidden lg:flex' : 'flex'}`}>
-            <div className="p-8 pb-6">
-                <div className="flex items-center justify-between mb-8">
+        <div className={`w-full lg:w-[380px] border-r border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl flex flex-col shrink-0 relative z-20 ${selectedUser ? 'hidden lg:flex' : 'flex'}`}>
+            <div className="p-6 pb-4">
+                <div className="flex items-center justify-between mb-6">
                     <div>
-                        <h1 className="text-2xl font-black text-slate-900 tracking-tight leading-none mb-1">Grid Nodes</h1>
+                        <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-none mb-1">Grid Nodes</h1>
                         <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Authorized Comms</p>
                     </div>
-                    <div className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white shadow-xl shadow-slate-200">
-                        <MessageSquare size={18} strokeWidth={2.5} />
+                    <div className="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-indigo-200">
+                        <MessageSquare size={16} strokeWidth={2.5} />
                     </div>
                 </div>
                 <div className="relative group mb-2">
@@ -228,13 +299,12 @@ export default function Chat() {
                         type="text"
                         placeholder="Filter nodes..."
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-100 rounded-xl py-3 pl-10 pr-4 text-xs font-bold text-slate-700 outline-none focus:bg-white focus:ring-4 focus:ring-indigo-500/5 transition-all"
+                        onChange={(e) => setSearch(e.target.value)}                            className="w-full bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl py-3 pl-10 pr-4 text-xs font-bold text-slate-700 dark:text-slate-200 outline-none focus:bg-white dark:focus:bg-slate-700 focus:ring-4 focus:ring-indigo-500/5 focus:border-indigo-500/20 transition-all placeholder:text-slate-300 dark:placeholder:text-slate-500"
                     />
                 </div>
             </div>
-            <div className="flex-1 overflow-y-auto custom-scrollbar px-4 pb-32">
-                <div className="space-y-1">
+            <div className="flex-1 overflow-y-auto custom-scrollbar px-3 pb-32">
+                <div className="space-y-0.5">
                     {filteredConversations.map(conv => {
                         const isOnline = onlineUsers.includes(conv._id);
                         return (
@@ -242,7 +312,7 @@ export default function Chat() {
                                 key={conv._id}
                                 whileHover={{ x: 4 }}
                                 onClick={() => setSelectedUser(conv)}
-                                className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all ${selectedUser?._id === conv._id ? 'bg-slate-900 text-white shadow-2xl shadow-slate-200' : 'hover:bg-slate-50 text-slate-600'}`}
+                                className={`flex items-center gap-4 p-4 rounded-2xl cursor-pointer transition-all ${selectedUser?._id === conv._id ? 'bg-slate-900 dark:bg-indigo-600 text-white shadow-2xl shadow-slate-200 dark:shadow-slate-900' : 'hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300'}`}
                             >
                                 <div className="relative shrink-0">
                                     <div className={`w-12 h-12 rounded-[1.2rem] overflow-hidden border-2 ${selectedUser?._id === conv._id ? 'border-indigo-400/30' : 'border-slate-100'}`}>
@@ -254,7 +324,7 @@ export default function Chat() {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                     <div className="flex justify-between items-center mb-0.5">
-                                        <h4 className={`text-sm font-black tracking-tight truncate ${selectedUser?._id === conv._id ? 'text-white' : 'text-slate-900'}`}>{conv.name}</h4>
+                                        <h4 className={`text-sm font-black tracking-tight truncate ${selectedUser?._id === conv._id ? 'text-white' : 'text-slate-900 dark:text-white'}`}>{conv.name}</h4>
                                         <span className={`text-[8px] font-bold uppercase ${selectedUser?._id === conv._id ? 'text-indigo-300' : 'text-slate-400'}`}>{isOnline ? 'Live' : 'Last 10m'}</span>
                                     </div>
                                     <p className={`text-[10px] font-medium truncate opacity-70 ${selectedUser?._id === conv._id ? 'text-indigo-100' : 'text-slate-400'}`}>
@@ -264,24 +334,12 @@ export default function Chat() {
                             </motion.div>
                         );
                     })}
-                </div>
-            </div>
-            <div className="p-6 bg-slate-50/50 border-t border-slate-50 pb-28">
-                <div className="flex items-center gap-3 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm">
-                    <div className="w-8 h-8 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 border border-emerald-100">
-                        <ShieldCheck size={16} strokeWidth={2.5} />
-                    </div>
-                    <div>
-                        <p className="text-[9px] font-black text-slate-900 uppercase tracking-widest mb-0.5">Protocol Link</p>
-                        <p className="text-[8px] font-bold text-slate-400 uppercase tracking-tighter">E2EE Tunnel Active</p>
-                    </div>
-                </div>
-            </div>
+                </div>                    </div>
         </div>
         <div className={`flex-1 flex flex-col bg-mesh relative ${!selectedUser ? 'hidden lg:flex' : 'flex'}`}>
             {selectedUser ? (
                 <>
-                    <div className="px-8 py-5 bg-white/80 backdrop-blur-xl border-b border-slate-100 flex items-center justify-between sticky top-0 z-30">
+                    <div className="px-8 py-5 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-100 dark:border-slate-800 flex items-center justify-between sticky top-0 z-30">
                         <div className="flex items-center gap-4">
                             <button onClick={() => setSelectedUser(null)} className="lg:hidden p-2 text-slate-400 hover:text-slate-900">
                                 <ArrowLeft size={20} />
@@ -295,7 +353,7 @@ export default function Chat() {
                                 )}
                             </div>
                             <div>
-                                <h3 className="text-base font-black text-slate-900 tracking-tight leading-none mb-1">{selectedUser.name}</h3>
+                                <h3 className="text-base font-black text-slate-900 dark:text-white tracking-tight leading-none mb-1">{selectedUser.name}</h3>
                                 <p className={`text-[9px] font-black uppercase tracking-widest ${onlineUsers.includes(selectedUser._id) ? 'text-emerald-600' : 'text-slate-400'}`}>
                                     {onlineUsers.includes(selectedUser._id) ? "Session Active" : "Disconnected Node"}
                                 </p>
@@ -311,38 +369,15 @@ export default function Chat() {
                         </div>
                     </div>
                     <div ref={scrollRef} className="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar pb-40">
-                        {messages.map((msg, idx) => {
-                            const isMe = msg.senderId === user?._id;
-                            return (
-                                <motion.div 
-                                    key={msg._id || idx}
-                                    initial={{ opacity: 0, y: 10, scale: 0.98 }}
-                                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                                    className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
-                                >
-                                    <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[70%]`}>
-                                        <div className={`px-5 py-3.5 rounded-[1.8rem] text-sm font-medium leading-relaxed shadow-sm ${
-                                            isMe 
-                                            ? 'bg-slate-900 text-white rounded-br-none shadow-xl shadow-slate-200' 
-                                            : 'bg-white border border-slate-100 text-slate-700 rounded-bl-none'
-                                        }`}>
-                                            {msg.image ? (
-                                                <div className="space-y-3">
-                                                    <img src={getMediaUrl(msg.image)} className="max-w-full rounded-2xl border border-white/10" />
-                                                    <p className="text-xs opacity-80">{msg.text}</p>
-                                                </div>
-                                            ) : msg.text}
-                                        </div>
-                                        <div className="flex items-center gap-2 mt-2 px-2">
-                                            <span className="text-[7px] font-black text-slate-300 uppercase tracking-tighter">
-                                                {new Date(msg.time || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                            </span>
-                                            {isMe && <CheckCheck size={10} className="text-indigo-400" />}
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
+                        {messages.map((msg, idx) => (
+                            <MessageBubble 
+                                key={msg._id || idx}
+                                msg={msg}
+                                isMe={msg.senderId === user?._id}
+                                decryptMessageText={decryptMessageText}
+                                getMediaUrl={getMediaUrl}
+                            />
+                        ))}
                         <AnimatePresence>
                             {otherUserTyping && (
                                 <motion.div
@@ -361,7 +396,7 @@ export default function Chat() {
                             )}
                         </AnimatePresence>
                     </div>
-                    <div className="p-8 pb-28 bg-white/80 backdrop-blur-xl border-t border-slate-100 relative">
+                    <div className="p-8 pb-28 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-t border-slate-100 dark:border-slate-800 relative">
                         <AnimatePresence>
                             {showEmojis && (
                                 <motion.div 
@@ -390,14 +425,14 @@ export default function Chat() {
                             <button onClick={() => fileInputRef.current.click()} disabled={isUploading} className="p-3.5 bg-slate-50 text-slate-400 rounded-2xl hover:text-indigo-600 hover:bg-white border border-transparent hover:border-slate-100 transition-all shadow-sm shrink-0">
                                 {isUploading ? <div className="w-5 h-5 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin" /> : <Paperclip size={20} strokeWidth={2.5} />}
                             </button>
-                            <div className="flex-1 flex items-center gap-4 bg-slate-50 border border-slate-100 rounded-[2.2rem] px-7 py-4 transition-all focus-within:bg-white focus-within:ring-4 focus-within:ring-indigo-500/5 shadow-inner relative">
+                            <div className="flex-1 flex items-center gap-4 bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-[2.2rem] px-7 py-4 transition-all focus-within:bg-white dark:focus-within:bg-slate-700 focus-within:ring-4 focus-within:ring-indigo-500/5 dark:focus-within:ring-indigo-500/20 shadow-inner dark:shadow-slate-900 relative">
                                 <input 
                                     type="text" 
                                     placeholder="Enter encrypted transmission payload..."
                                     value={newMessage}
                                     onChange={(e) => handleTyping(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                                    className="flex-1 bg-transparent outline-none text-sm text-slate-700 font-medium"
+                                    className="flex-1 bg-transparent outline-none text-sm text-slate-700 dark:text-slate-200 font-medium"
                                 />
                                 <button onClick={() => setShowEmojis(!showEmojis)} className={`transition-colors ${showEmojis ? 'text-indigo-600' : 'text-slate-300 hover:text-slate-600'}`}>
                                     <Smile size={20} strokeWidth={2.5} />
@@ -414,11 +449,66 @@ export default function Chat() {
                     <div className="w-32 h-32 rounded-[3.5rem] bg-white border border-slate-100 flex items-center justify-center mb-10 shadow-[0_30px_80px_rgba(0,0,0,0.03)] group hover:scale-110 transition-transform duration-700">
                         <MessageSquare size={48} strokeWidth={1} className="text-slate-200 group-hover:text-indigo-500 transition-colors" />
                     </div>
-                    <h2 className="text-3xl font-black text-slate-900 tracking-tight mb-3">Transmission Hub</h2>
+                    <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight mb-3">Transmission Hub</h2>
                     <p className="text-slate-400 font-medium max-w-xs mb-10 leading-relaxed text-sm">Select an authorized node from the grid to initialize a secure peer-to-peer transmission protocol.</p>
                 </div>
             )}
         </div>
     </div>
+  );
+}
+
+// 🫧 E2EE Message Bubble Component
+function MessageBubble({ msg, isMe, decryptMessageText: decryptFn }) {
+  const [displayText, setDisplayText] = useState(msg.text);
+  
+  useEffect(() => {
+    let isCancelled = false;
+    
+    if (msg.isEncrypted && msg.text?.startsWith("E2EE:")) {
+      setDisplayText("🔒 Decrypting...");
+      decryptFn(msg.text).then(decrypted => {
+        if (!isCancelled) setDisplayText(decrypted);
+      }).catch(() => {
+        if (!isCancelled) setDisplayText("🔒 [Decryption Error]");
+      });
+    }
+    
+    return () => { isCancelled = true; };
+  }, [msg._id, msg.text]);
+
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 10, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}
+    >
+      <div className={`flex flex-col ${isMe ? 'items-end' : 'items-start'} max-w-[70%]`}>
+        <div className={`px-5 py-3.5 rounded-[1.8rem] text-sm font-medium leading-relaxed shadow-sm ${
+          isMe 
+          ? 'bg-slate-900 dark:bg-indigo-600 text-white rounded-br-none shadow-xl shadow-slate-200 dark:shadow-slate-900' 
+          : 'bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-bl-none'
+        }`}>
+          {msg.image ? (
+            <div className="space-y-3">
+              <img src={getMediaUrl(msg.image)} className="max-w-full rounded-2xl border border-white/10" />
+              <p className="text-xs opacity-80">{displayText}</p>
+            </div>
+          ) : displayText}
+          {msg.isEncrypted && !msg.image && (
+            <div className="flex items-center gap-1 mt-1">
+              <Lock size={10} className="text-indigo-400" />
+              <span className="text-[7px] text-indigo-300 font-black uppercase tracking-widest">E2EE</span>
+            </div>
+          )}
+        </div>
+        <div className="flex items-center gap-2 mt-2 px-2">
+          <span className="text-[7px] font-black text-slate-300 uppercase tracking-tighter">
+            {new Date(msg.time || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          </span>
+          {isMe && <CheckCheck size={10} className="text-indigo-400" />}
+        </div>
+      </div>
+    </motion.div>
   );
 }

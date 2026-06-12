@@ -122,6 +122,50 @@ export const getPostsByType = catchAsync(async (req, res) => {
 });
 
 /* =========================
+   ✅ SEARCH POSTS
+========================= */
+export const searchPosts = catchAsync(async (req, res) => {
+  const { q } = req.query;
+  
+  if (!q || q.trim().length === 0) {
+    return res.json([]);
+  }
+
+  const searchTerm = q.trim();
+  
+  const { data: posts, error } = await supabase
+    .from("posts")
+    .select(`
+      id, content, type, title, price, location, event_date, category, image, media_type, visibility, created_at,
+      author:users(id, name, username, avatar),
+      comments:comments(id, text, created_at, user:users(id, name, username, avatar)),
+      likes:likes(user_id)
+    `)
+    .or(`content.ilike.%${searchTerm}%,title.ilike.%${searchTerm}%`)
+    .eq("visibility", "public")
+    .order("created_at", { ascending: false })
+    .limit(20);
+
+  if (error) throw error;
+
+  const formattedPosts = posts.map(post => ({
+    ...post,
+    _id: post.id,
+    image: post.image,
+    media_type: post.media_type,
+    likes: post.likes?.map(l => l.user_id) || [],
+    comments: post.comments?.map(c => ({
+      ...c,
+      _id: c.id,
+      user: c.user ? { ...c.user, _id: c.user.id } : null
+    })) || [],
+    author: post.author ? { ...post.author, _id: post.author.id } : null
+  }));
+
+  res.json(formattedPosts);
+});
+
+/* =========================
    ✅ CREATE POST
 ========================= */
 export const createPost = catchAsync(async (req, res) => {

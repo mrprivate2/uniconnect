@@ -24,10 +24,10 @@ import helmet from "helmet";
 import morgan from "morgan";
 import compression from "compression";
 import { Server } from "socket.io";
-import { rateLimit } from "express-rate-limit";
 import jwt from "jsonwebtoken";
 
 import { supabase } from "./config/supabase.js";
+import { authLimiter, apiLimiter } from "./middleware/rateLimiter.js";
 import postRoutes from "./routes/postRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
@@ -161,18 +161,9 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
 
-// Rate Limiting
-const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 100,
-  message: "Too many requests from this IP, please try again later."
-});
-const generalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  limit: 1000,
-});
+// Rate Limiting — using middleware from ./middleware/rateLimiter.js
 app.use("/api/auth", authLimiter);
-app.use("/api", generalLimiter);
+app.use("/api", apiLimiter);
 
 // =========================
 // 📁 STATIC FILES

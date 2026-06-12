@@ -1,7 +1,7 @@
 import express from "express";
 import multer from "multer";
 import { protect } from "../middleware/authMiddleware.js";
-import { getChatHistory, uploadChatMedia } from "../controllers/chatController.js";
+import { getChatHistory, uploadChatMedia, getConversations } from "../controllers/chatController.js";
 
 const router = express.Router();
 
@@ -10,6 +10,9 @@ const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 } // 10MB
 });
+
+// ✅ Get list of conversations
+router.get("/conversations", protect, getConversations);
 
 // ✅ Get chat history with another user
 router.get("/:userId", protect, getChatHistory);

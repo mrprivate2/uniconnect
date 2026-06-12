@@ -1,6 +1,5 @@
 import express from "express";
-import multer from "multer";
-import { 
+import multer from "multer";import {
   getPosts, 
   getPostsByType, 
   getPostsByUser,
@@ -13,7 +12,8 @@ import {
   applyToPost,
   getApplicants,
   getMyEventsWithApplicants,
-  getSinglePost
+  getSinglePost,
+  searchPosts
 } from "../controllers/postController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
@@ -72,6 +72,7 @@ router.route("/")
     createPost
   );
 
+router.get("/search", searchPosts);
 router.get("/all", protect, admin, getAllPostsAdmin);
 router.get("/my-management", protect, getMyEventsWithApplicants);
 router.get("/type/:typeName", getPostsByType);

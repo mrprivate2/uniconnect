@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   X, Heart, MessageCircle, Send, Share2, 
   MapPin, Calendar, Briefcase, Store, Tag,
-  Clock, ShieldCheck, Zap, UserPlus, Trash2, ArrowRight, MessageSquare
+  Clock, ShieldCheck, Zap, UserPlus, Trash2, ArrowRight, MessageSquare, ShieldAlert
 } from "lucide-react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
@@ -24,6 +24,10 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
 
   // Handle Like
   const handleLike = async () => {
+    if (!token) {
+      toast.error("Authentication required to engage.");
+      return;
+    }
     try {
       const res = await axios.put(`${API_BASE_URL}/posts/${content._id}/like`, {}, {
         headers: { Authorization: `Bearer ${token}` }
@@ -56,6 +60,10 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
 
   // Handle Apply / RSVP / Contact
   const handleApply = async () => {
+    if (!token) {
+      toast.error("Authentication required to apply.");
+      return;
+    }
     if (content.type === 'rent') {
       onClose();
       navigate(`/chat?userId=${content.author_id}`);
@@ -76,6 +84,10 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
 
   // Handle Edit
   const handleEdit = async () => {
+    if (!token) {
+      toast.error("Authentication required.");
+      return;
+    }
     try {
       await axios.put(`${API_BASE_URL}/posts/${content._id}`, { content: editValue }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -87,6 +99,25 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
       toast.success("Node data updated.");
     } catch (err) {
       toast.error("Update failed.");
+    }
+  };
+
+  // Handle Report
+  const handleReport = async () => {
+    if (!token) {
+      toast.error("Authentication required to file a report.");
+      return;
+    }
+    const reason = window.prompt("Reason for flagging this node (e.g., Spam, Harassment, Inappropriate):");
+    if (!reason) return;
+    
+    try {
+      await axios.post(`${API_BASE_URL}/reports`, { postId: content._id, reason }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success("Threat report transmitted to admin sector.");
+    } catch (err) {
+      toast.error("Report transmission failed.");
     }
   };
 
@@ -107,10 +138,10 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative bg-white w-full max-w-6xl h-[90vh] md:h-[85vh] rounded-[3.5rem] overflow-hidden shadow-2xl flex flex-col md:flex-row bg-mesh"
+          className="relative bg-white dark:bg-slate-900 w-full max-w-6xl h-[90vh] md:h-[85vh] rounded-[3.5rem] overflow-hidden shadow-2xl dark:shadow-slate-900 flex flex-col md:flex-row bg-mesh"
         >
           {/* LEFT: MEDIA & CONTENT */}
-          <div className="w-full md:w-[60%] h-[40%] md:h-full bg-slate-50 border-r border-slate-100 relative group">
+          <div className="w-full md:w-[60%] h-[40%] md:h-full bg-slate-50 dark:bg-slate-800 border-r border-slate-100 dark:border-slate-700 relative group">
               {content.image ? (
                   <div className="w-full h-full flex items-center justify-center p-8">
                       {content.media_type === 'video' ? (
@@ -136,10 +167,10 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
           </div>
 
           {/* RIGHT: INFO & COMMS */}
-          <div className="flex-1 h-[60%] md:h-full flex flex-col bg-white/80 backdrop-blur-xl relative">
+          <div className="flex-1 h-[60%] md:h-full flex flex-col bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl relative">
               
               {/* Header */}
-              <div className="p-8 border-b border-slate-50 flex items-center justify-between">
+              <div className="p-8 border-b border-slate-50 dark:border-slate-700/50 flex items-center justify-between">
                   <Link 
                     to={`/user/${content.author_id}`}
                     onClick={onClose}
@@ -149,7 +180,7 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
                           <img src={getMediaUrl(content.author?.avatar, "avatar", content.author?.username)} className="w-full h-full object-cover" alt="" />
                       </div>
                       <div>
-                          <h4 className="text-sm font-black text-slate-900 uppercase tracking-tight group-hover/author:text-indigo-600 transition-colors">{content.author?.name}</h4>
+                          <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight group-hover/author:text-indigo-600 dark:group-hover/author:text-indigo-400 transition-colors">{content.author?.name}</h4>
                           <div className="flex items-center gap-1.5 text-[9px] font-bold text-slate-400 uppercase tracking-widest">
                               <Clock size={10} /> {new Date(content.created_at).toLocaleDateString()}
                           </div>
@@ -198,7 +229,7 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
                   ) : (
                     (content.image || content.content) && (
                         <div className="mb-10">
-                            <h3 className="text-2xl font-black text-slate-900 tracking-tight mb-4">{content.title}</h3>
+                            <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight mb-4">{content.title}</h3>
                             <p className="text-slate-600 font-medium leading-relaxed">{content.content}</p>
                         </div>
                     )
@@ -208,7 +239,7 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
                   {(content.location || content.price || content.category) && (
                       <div className="grid grid-cols-2 gap-4 mb-10">
                           {content.location && (
-                              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center gap-3">
+                              <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 flex items-center gap-3">
                                   <MapPin size={16} className="text-indigo-500" />
                                   <div>
                                       <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Node Location</p>
@@ -217,7 +248,7 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
                               </div>
                           )}
                           {content.price && (
-                              <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex items-center gap-3">
+                              <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-2xl border border-slate-100 dark:border-slate-700 flex items-center gap-3">
                                   <Zap size={16} className="text-amber-500" />
                                   <div>
                                       <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Protocol Cost</p>
@@ -284,7 +315,7 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
               </div>
 
               {/* Input Overlay */}
-              <div className="p-8 bg-slate-50 border-t border-slate-100">
+              <div className="p-8 bg-slate-50 dark:bg-slate-800 border-t border-slate-100 dark:border-slate-700">
                   <div className="flex items-center gap-6 mb-6 px-2">
                       <button onClick={handleLike} className="flex items-center gap-2 group transition-all">
                           <Heart size={20} className={`${content.likes?.includes(user?._id) ? "text-rose-500 fill-rose-500" : "text-slate-300 group-hover:text-rose-500"}`} />
@@ -294,9 +325,18 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
                           <MessageCircle size={20} />
                           <span className="text-[10px] font-black text-slate-400">{content.comments?.length || 0} Signals</span>
                       </div>
-                      <button className="ml-auto text-slate-200 hover:text-indigo-500 transition-colors">
-                          <Share2 size={18} />
-                      </button>
+                      <div className="ml-auto flex items-center gap-4">
+                        <button 
+                          onClick={handleReport}
+                          className="text-slate-200 hover:text-rose-500 transition-colors"
+                          title="Report Node"
+                        >
+                            <ShieldAlert size={18} />
+                        </button>
+                        <button className="text-slate-200 hover:text-indigo-500 transition-colors">
+                            <Share2 size={18} />
+                        </button>
+                      </div>
                   </div>
 
                   <form onSubmit={handleComment} className="flex gap-3">

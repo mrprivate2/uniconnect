@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { Eye, EyeOff, Shield, User, ArrowRight, Lock, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, Shield, User, ArrowRight, Lock, CheckCircle2, Moon, Sun } from "lucide-react";
+import { useTheme } from "../context/ThemeContext";
 import axios from "axios";
 import API_BASE_URL from "../api";
 import { generateKeyPair } from "../utils/crypto";
@@ -11,6 +12,7 @@ export default function Login({ onLogin }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isForgot, setIsForgot] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { theme, toggleTheme } = useTheme();
   const [formData, setFormData] = useState({ email: "", password: "", name: "", username: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -101,10 +103,10 @@ export default function Login({ onLogin }) {
   };
 
   return (
-    <div className="h-screen w-full flex font-sans selection:bg-indigo-100 bg-mesh text-slate-900 overflow-hidden">
+    <div className="h-screen w-full flex font-sans selection:bg-indigo-100 dark:selection:bg-indigo-900/50 bg-mesh text-slate-900 dark:text-slate-100 overflow-hidden">
       
       {/* LEFT SIDE - Premium Hero */}
-      <div className="hidden lg:flex w-1/2 bg-white sticky top-0 h-full items-center justify-center p-20 overflow-hidden border-r border-slate-100 flex-shrink-0">
+      <div          className="hidden lg:flex w-1/2 bg-white dark:bg-slate-950 sticky top-0 h-full items-center justify-center p-16 overflow-hidden border-r border-slate-100 dark:border-slate-800 flex-shrink-0">
         <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
         
         <div className="relative z-10 max-w-lg">
@@ -113,7 +115,7 @@ export default function Login({ onLogin }) {
               <Shield size={12} strokeWidth={3} /> Premium Security Enabled
             </div>
             
-            <h1 className="text-7xl font-black text-slate-900 tracking-tighter leading-[0.9] mb-6">
+            <h1 className="text-6xl font-black text-slate-900 dark:text-white tracking-tighter leading-[0.9] mb-6">
               The Student<br />
               <span className="text-gradient">Operating System.</span>
             </h1>
@@ -147,17 +149,17 @@ export default function Login({ onLogin }) {
       </div>
 
       {/* RIGHT SIDE - Refined Auth Form */}
-      <div className="flex-1 h-full flex flex-col items-center justify-start p-8 pt-12 md:pt-24 overflow-y-auto no-scrollbar">
+      <div className="flex-1 h-full flex flex-col items-center justify-start p-6 pt-8 md:pt-16 overflow-hidden">
         <motion.div 
           layout
-          className="w-full max-w-[440px] bg-white rounded-[3rem] p-10 shadow-[0_20px_70px_rgba(0,0,0,0.03)] border border-slate-100"
+          className="w-full max-w-[380px] bg-white dark:bg-slate-900 rounded-[3rem] p-8 shadow-[0_20px_70px_rgba(0,0,0,0.03)] dark:shadow-[0_20px_70px_rgba(0,0,0,0.3)] border border-slate-100 dark:border-slate-700"
         >
           {/* Role & Mode Switcher */}
           <div className="flex flex-col gap-6 mb-10">
-            <div className="flex bg-slate-50 p-1.5 rounded-2xl border border-slate-100">
+            <div className="flex bg-slate-50 dark:bg-slate-800 p-1.5 rounded-2xl border border-slate-100 dark:border-slate-700">
               <button 
                 onClick={() => setIsAdmin(false)}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black transition-all ${!isAdmin ? "bg-white shadow-md text-indigo-600" : "text-slate-400"}`}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black transition-all ${!isAdmin ? "bg-white dark:bg-slate-800 shadow-md text-indigo-600" : "text-slate-400 dark:text-slate-500"}`}
               >
                 <User size={14} strokeWidth={3} /> STUDENT
               </button>
@@ -166,7 +168,7 @@ export default function Login({ onLogin }) {
                   setIsAdmin(true);
                   setIsLogin(true);
                 }}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black transition-all ${isAdmin ? "bg-white shadow-md text-indigo-600" : "text-slate-400"}`}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black transition-all ${isAdmin ? "bg-white dark:bg-slate-800 shadow-md text-indigo-600" : "text-slate-400 dark:text-slate-500"}`}
               >
                 <Shield size={14} strokeWidth={3} /> ADMIN
               </button>
@@ -179,13 +181,22 @@ export default function Login({ onLogin }) {
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 5 }}
-                    className="text-3xl font-black text-slate-900 tracking-tight"
+                    className="text-3xl font-black text-slate-900 dark:text-white tracking-tight"
                   >
                     {isForgot ? "Reset Protocol" : (isAdmin ? "Hello Admin" : (isLogin ? "Welcome back" : "Create account"))}
                   </motion.h2>
                 </AnimatePresence>
-                <div className="h-10 w-10 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600">
+                <div className="flex items-center gap-3">
+                  <button 
+                    onClick={toggleTheme}
+                    className="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 hover:scale-110 transition-all"
+                    title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+                  >
+                    {theme === "dark" ? <Sun size={20} strokeWidth={2.5} /> : <Moon size={20} strokeWidth={2.5} />}
+                  </button>
+                  <div className="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                     <Lock size={20} strokeWidth={2.5} />
+                  </div>
                 </div>
             </div>
           </div>
@@ -194,7 +205,7 @@ export default function Login({ onLogin }) {
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-emerald-50 text-emerald-600 text-xs p-4 rounded-2xl mb-6 font-bold border border-emerald-100 flex items-center gap-3"
+              className="bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs p-4 rounded-2xl mb-6 font-bold border border-emerald-100 dark:border-emerald-800/50 flex items-center gap-3"
             >
               <CheckCircle2 size={16} strokeWidth={3} />
               {statusMessage}
@@ -205,7 +216,7 @@ export default function Login({ onLogin }) {
             <motion.div 
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-rose-50 text-rose-600 text-xs p-4 rounded-2xl mb-6 font-bold border border-rose-100 flex items-center gap-3"
+              className="bg-rose-50 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 text-xs p-4 rounded-2xl mb-6 font-bold border border-rose-100 dark:border-rose-800/50 flex items-center gap-3"
             >
               <div className="w-1.5 h-1.5 bg-rose-600 rounded-full animate-pulse" />
               {error}
@@ -223,11 +234,13 @@ export default function Login({ onLogin }) {
                     Enter your authorized email address to receive a secure reset synchronization link.
                  </p>
                  <div>
-                    <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Email Address</label>
+                    <label htmlFor="reset-email" className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Email Address</label>
                     <input
+                      id="reset-email"
                       name="email"
                       type="email"
                       required
+                      autoComplete="email"
                       onChange={handleInputChange}
                       className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-transparent focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm text-slate-900 font-bold"
                       placeholder="name@university.edu"
@@ -235,14 +248,14 @@ export default function Login({ onLogin }) {
                   </div>
                   <button
                     disabled={loading}
-                    className="w-full py-5 rounded-2xl bg-[#0F172A] text-white text-xs font-black uppercase tracking-[0.2em] hover:bg-black transition-all active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-3 shadow-2xl shadow-slate-200"
+                    className="w-full py-5 rounded-2xl bg-[#0F172A] dark:bg-indigo-600 text-white text-xs font-black uppercase tracking-[0.2em] hover:bg-black dark:hover:bg-indigo-700 transition-all active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-3 shadow-2xl shadow-slate-200 dark:shadow-slate-900"
                   >
                     {loading ? <div className="h-4 w-4 border-2 border-white/20 border-t-white rounded-full animate-spin" /> : "Request Reset Link"}
                   </button>
                   <button 
                     type="button"
                     onClick={() => setIsForgot(false)}
-                    className="w-full py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-indigo-600 transition-colors"
+                    className="w-full py-4 text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     Back to Login
                   </button>
@@ -260,22 +273,26 @@ export default function Login({ onLogin }) {
                     >
                       <div className="grid grid-cols-2 gap-4 pb-5">
                         <div>
-                          <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Full Name</label>
+                          <label htmlFor="signup-name" className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Full Name</label>
                           <input
+                            id="signup-name"
                             name="name"
                             required={!isLogin}
+                            autoComplete="name"
                             onChange={handleInputChange}
-                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-transparent focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm text-slate-900 font-bold"
+                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-transparent focus:bg-white dark:focus:bg-slate-700 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm text-slate-900 dark:text-white font-bold"
                             placeholder="Sawan Y."
                           />
                         </div>
                         <div>
-                          <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Username</label>
+                          <label htmlFor="signup-username" className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Username</label>
                           <input
+                            id="signup-username"
                             name="username"
                             required={!isLogin}
+                            autoComplete="username"
                             onChange={handleInputChange}
-                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-transparent focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm text-slate-900 font-bold"
+                            className="w-full px-5 py-4 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-transparent focus:bg-white dark:focus:bg-slate-700 focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm text-slate-900 dark:text-white font-bold"
                             placeholder="sawanyadav"
                           />
                         </div>
@@ -285,11 +302,13 @@ export default function Login({ onLogin }) {
                 </AnimatePresence>
 
                 <div>
-                  <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Email or Username</label>
+                  <label htmlFor="login-email" className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Email or Username</label>
                   <input
+                    id="login-email"
                     name="email"
                     type="text"
                     required
+                    autoComplete="username"
                     onChange={handleInputChange}
                     className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-transparent focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm text-slate-900 font-bold"
                     placeholder="name@university.edu or username"
@@ -298,13 +317,15 @@ export default function Login({ onLogin }) {
 
                 <div className="relative">
                   <div className="flex justify-between mb-2 ml-1">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Password</label>
+                    <label htmlFor="login-password" className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Password</label>
                     {isLogin && <button onClick={() => setIsForgot(true)} type="button" className="text-[10px] text-indigo-600 font-black hover:underline uppercase tracking-widest">Forgot?</button>}
                   </div>
                   <input
+                    id="login-password"
                     name="password"
                     type={showPassword ? "text" : "password"}
                     required
+                    autoComplete={isLogin ? "current-password" : "new-password"}
                     onChange={handleInputChange}
                     className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-transparent focus:bg-white focus:ring-4 focus:ring-indigo-500/10 transition-all outline-none text-sm text-slate-900 font-bold"
                     placeholder="••••••••"
@@ -342,19 +363,19 @@ export default function Login({ onLogin }) {
                 className="overflow-hidden"
               >
                 <div className="relative flex items-center my-10">
-                  <div className="flex-grow border-t border-slate-100"></div>
-                  <span className="px-4 text-[10px] text-slate-300 font-black tracking-[0.3em]">OR</span>
-                  <div className="flex-grow border-t border-slate-100"></div>
+                  <div className="flex-grow border-t border-slate-100 dark:border-slate-700"></div>
+                  <span className="px-4 text-[10px] text-slate-300 dark:text-slate-500 font-black tracking-[0.3em]">OR</span>
+                  <div className="flex-grow border-t border-slate-100 dark:border-slate-700"></div>
                 </div>
 
                 <button 
                   onClick={handleGuestLogin}
-                  className="w-full py-4 rounded-2xl border-2 border-slate-50 text-slate-500 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-50 transition-all"
+                  className="w-full py-4 rounded-2xl border-2 border-slate-50 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
                 >
                   Explore as Guest
                 </button>
 
-                <p className="text-center mt-10 text-[11px] font-bold text-slate-400">
+                <p className="text-center mt-10 text-[11px] font-bold text-slate-400 dark:text-slate-400">
                     {isLogin ? "New to UniConnect?" : "Already have an account?"}{" "}
                     <button 
                     onClick={() => setIsLogin(!isLogin)}
@@ -367,20 +388,20 @@ export default function Login({ onLogin }) {
             )}
           </AnimatePresence>
 
-          <div className="mt-8 pt-6 border-t border-slate-50 text-center">
+          <div className="mt-8 pt-6 border-t border-slate-50 dark:border-slate-700/50 text-center">
             <button 
               onClick={() => {
                 localStorage.clear();
                 window.location.reload();
               }}
-              className="text-[9px] font-black text-slate-300 uppercase tracking-[0.3em] hover:text-rose-400 transition-colors"
+              className="text-[9px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.3em] hover:text-rose-400 transition-colors"
             >
               Emergency: Reset Local Session
             </button>
           </div>
         </motion.div>
         
-        <footer className="mt-12 text-[10px] font-black text-slate-300 uppercase tracking-[0.4em]">
+        <footer className="mt-12 text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.4em]">
           End-to-End Encrypted Environment
         </footer>
       </div>

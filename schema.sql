@@ -124,7 +124,17 @@ CREATE POLICY "Authors can view applications" ON applications
 CREATE POLICY "Users can apply" ON applications
   FOR INSERT WITH CHECK (auth.uid() = user_id);
 
--- 11. Reports Table
+-- 11. Password Reset Tokens Table
+CREATE TABLE password_resets (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES users(id) ON DELETE CASCADE NOT NULL,
+  token TEXT NOT NULL,
+  expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+  used BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 12. Reports Table
 CREATE TABLE reports (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   post_id UUID REFERENCES posts(id) ON DELETE CASCADE,

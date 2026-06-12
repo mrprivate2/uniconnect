@@ -2,8 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Grid, Film, UserSquare2, PlusSquare, Menu, ChevronDown, 
-  Link as LinkIcon, Camera, Heart, User as UserIcon, Lock, Share, Settings, X, Briefcase,
+  Link as LinkIcon, Camera, Heart, Settings, X, Briefcase,
   LayoutGrid, Bookmark, Plus, MessageSquare
 } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
@@ -87,9 +86,14 @@ export default function Profile() {
   const API = API_BASE_URL.replace("/api", "");
 
   useEffect(() => {
-    if (!token) {
-        navigate("/");
-        return;
+    // 🛡️ Guard: Ensure authUser exists before proceeding
+    if (!authUser) return;
+
+    // 🛡️ Guard: Guests don't have a profile on the backend
+    if (authUser.isGuest) {
+      setProfileData(authUser);
+      setProfileLoading(false);
+      return;
     }
 
     const fetchProfileData = async () => {
@@ -120,9 +124,7 @@ export default function Profile() {
       }
     };
 
-    if (authUser?._id || authUser?.id) {
-      fetchProfileData();
-    }
+    fetchProfileData();
   }, [navigate, authUser?._id, authUser?.id, token]);
 
   // Real-time updates
@@ -194,13 +196,13 @@ export default function Profile() {
   const avatarUrl = getMediaUrl(profileData?.avatar, "avatar", profileData?.username);
 
   return (
-    <div className="min-h-screen bg-mesh text-slate-900 pb-40 font-sans selection:bg-blue-100 relative overflow-x-hidden">
+    <div className="min-h-screen bg-mesh text-slate-900 dark:text-slate-100 pb-40 font-sans selection:bg-blue-100 dark:selection:bg-blue-900/50 relative overflow-x-hidden">
       <AestheticBackground />
 
       {/* 📱 TOP NAVIGATION BAR */}
-      <header className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-xl border-b border-blue-50 h-14 z-50 flex items-center justify-between px-4 shadow-sm">
+      <header className="fixed top-0 left-0 right-0 bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-blue-50 dark:border-slate-800 h-14 z-50 flex items-center justify-between px-4 shadow-sm dark:shadow-slate-900">
         <div className="flex items-center gap-2">
-          <h1 className="text-lg font-black tracking-tighter text-slate-900 lowercase italic">
+          <h1 className="text-lg font-black tracking-tighter text-slate-900 dark:text-white lowercase italic">
             Uni<span className="text-blue-600">Connect</span>
           </h1>
           <div className="w-px h-4 bg-slate-200 mx-2" />
@@ -211,10 +213,10 @@ export default function Profile() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto pt-24 px-6 relative z-10">
+      <main className="max-w-4xl mx-auto pt-16 px-6 relative z-10">
         
         {/* --- PROFILE HEADER CARD (INSTA-TECH BLEND) --- */}
-        <div className="bg-white rounded-[3rem] p-10 border border-blue-50 shadow-[0_20px_60px_rgba(0,0,0,0.03)] mb-12 relative overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 border border-blue-50 dark:border-slate-700 shadow-[0_20px_60px_rgba(0,0,0,0.03)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.2)] mb-12 relative overflow-hidden">
             {/* Decorative inner glow */}
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl" />
             
@@ -242,7 +244,7 @@ export default function Profile() {
                 <div className="flex-1 flex flex-col gap-8 text-center md:text-left">
                     <div>
                         <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 mb-4">
-                            <h2 className="text-3xl font-black text-slate-900 tracking-tight">{profileData?.name}</h2>
+                            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{profileData?.name}</h2>
                             <button 
                                 onClick={() => navigate("/settings")}
                                 className="px-6 py-2 bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-black uppercase tracking-widest rounded-xl transition-all"
@@ -260,50 +262,53 @@ export default function Profile() {
                     </div>
 
                     {/* Stats Dashboard Grid */}
-                    <div className="grid grid-cols-3 gap-4">
-                        <div className="bg-blue-50/50 border border-blue-100/50 p-4 rounded-2xl text-center hover:bg-blue-50 transition-colors cursor-default">
-                            <p className="text-xl font-black text-blue-600">{posts.length}</p>
+                    <div className="grid grid-cols-3 gap-3">
+                        <motion.div whileHover={{ scale: 1.03 }} className="bg-indigo-50/50 dark:bg-indigo-900/20 border border-indigo-100/50 dark:border-indigo-800/50 p-4 rounded-2xl text-center cursor-default">
+                            <p className="text-xl font-black text-indigo-600">{posts.length}</p>
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Logs</p>
-                        </div>
-                        <div 
+                        </motion.div>
+                        <motion.div 
+                            whileHover={{ scale: 1.03 }}
                             onClick={() => setShowModal("followers")}
-                            className="bg-white border border-slate-100 p-4 rounded-2xl text-center hover:border-blue-200 hover:shadow-lg hover:shadow-blue-500/5 transition-all cursor-pointer"
+                            className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 p-4 rounded-2xl text-center hover:border-blue-200 dark:hover:border-blue-700 hover:shadow-lg hover:shadow-blue-500/5 transition-all cursor-pointer"
                         >
-                            <p className="text-xl font-black text-slate-900">{profileData?.followersCount || 0}</p>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Peers</p>
-                        </div>
-                        <div 
+                            <p className="text-xl font-black text-slate-900 dark:text-white">{profileData?.followersCount || 0}</p>
+                            <p className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest">Peers</p>
+                        </motion.div>
+                        <motion.div 
+                            whileHover={{ scale: 1.03 }}
                             onClick={() => setShowModal("following")}
                             className="bg-white border border-slate-100 p-4 rounded-2xl text-center hover:border-blue-200 hover:shadow-lg hover:shadow-blue-500/5 transition-all cursor-pointer"
                         >
-                            <p className="text-xl font-black text-slate-900">{profileData?.followingCount || 0}</p>
-                            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Signals</p>
-                        </div>
+                            <p className="text-xl font-black text-slate-900 dark:text-white">{profileData?.followingCount || 0}</p>
+                            <p className="text-[10px] font-black text-slate-400 dark:text-slate-400 uppercase tracking-widest">Signals</p>
+                        </motion.div>
                     </div>
                 </div>
             </div>
         </div>
 
         {/* --- CONTENT NAVIGATION (TAB SWITCHER) --- */}
-        <div className="flex justify-center border-t border-blue-50 relative mb-12">
-            <div className="flex gap-12">
+        <div className="flex justify-center border-t border-slate-100 dark:border-slate-700 relative mb-10">
+            <div className="flex gap-8 md:gap-12">
                 {[
                     { id: "grid", label: "DATA LOGS", icon: LayoutGrid },
                     { id: "management", label: "ADMIN SECTOR", icon: Briefcase },
                     { id: "tagged", label: "SAVED NODES", icon: Bookmark }
                 ].map(tab => (
-                    <button
+                    <motion.button
                         key={tab.id}
+                        whileTap={{ scale: 0.97 }}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center gap-2 py-4 border-t-2 transition-all duration-500 ${
+                        className={`flex items-center gap-2 py-4 border-t-2 transition-all duration-300 ${
                             activeTab === tab.id 
-                            ? "border-blue-600 text-blue-600" 
-                            : "border-transparent text-slate-400 hover:text-slate-600"
+                            ? "border-indigo-600 text-indigo-600" 
+                            : "border-transparent text-slate-400 dark:text-slate-400 hover:text-slate-600 dark:hover:text-slate-300"
                         }`}
                     >
-                        <tab.icon size={14} strokeWidth={3} />
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em]">{tab.label}</span>
-                    </button>
+                        <tab.icon size={14} strokeWidth={activeTab === tab.id ? 3 : 2.5} />
+                        <span className="text-[10px] font-black uppercase tracking-[0.15em]">{tab.label}</span>
+                    </motion.button>
                 ))}
             </div>
         </div>

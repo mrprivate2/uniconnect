@@ -26,7 +26,7 @@ export default function UniConnectNavbar() {
       <motion.nav
         onMouseMove={(e) => mouseX.set(e.pageX)}
         onMouseLeave={() => mouseX.set(Infinity)}
-        className="flex items-center gap-1 p-1.5 bg-white/95 backdrop-blur-md rounded-2xl border border-slate-200 shadow-lg"
+        className="flex items-center gap-1 p-1.5 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md rounded-2xl border border-slate-200 dark:border-slate-800 shadow-lg dark:shadow-slate-900/50"
       >
         <div className="flex items-center gap-1">
           {navItems.slice(0, 2).map((item) => (
@@ -90,10 +90,9 @@ function ContextNavItem({
       ref={ref}
       style={{ scale: isActive ? 1 : scale }}
       onClick={() => navigate(path)}
-      className={`relative flex items-center transition-all duration-200 ${
-        isActive
-          ? "px-4 py-2 rounded-xl bg-slate-900 text-white"
-          : "px-3 py-3 rounded-xl text-slate-500 hover:text-slate-700 hover:bg-slate-50"
+      className={`relative flex items-center transition-all duration-200 ${          isActive
+          ? "px-4 py-2 rounded-xl bg-slate-900 dark:bg-indigo-600 text-white"
+          : "px-3 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800"
       }`}
     >
       <div className="flex items-center gap-2 relative z-10">

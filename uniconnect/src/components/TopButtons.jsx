@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { MessageCircle, Bell, User, Check, Trash2, Clock, ShieldCheck, Sparkles } from "lucide-react";
+import { MessageCircle, Bell, User, Check, Trash2, Clock, ShieldCheck, Sparkles, Moon, Sun } from "lucide-react";
 import { motion as Motion, AnimatePresence, useMotionValue, useSpring, useTransform } from "framer-motion";
 import axios from "axios";
 import { io } from "socket.io-client";
 import API_BASE_URL from "../api";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../context/ThemeContext";
 
 export default function UniConnectTopBar() {
   const navigate = useNavigate();
   const _location = useLocation();
   const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -64,10 +66,19 @@ export default function UniConnectTopBar() {
 
   return (
     <div className="flex items-center gap-4">
+      {/* Dark Mode Toggle */}
+      <button
+        onClick={toggleTheme}
+        className="p-3.5 rounded-2xl text-slate-400 hover:text-indigo-600 hover:bg-indigo-50/50 dark:text-slate-500 dark:hover:text-indigo-400 dark:hover:bg-indigo-900/20 transition-all"
+        title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
+      >
+        {theme === "dark" ? <Sun size={18} strokeWidth={2.5} /> : <Moon size={18} strokeWidth={2.5} />}
+      </button>
+
       {/* --- PREMIUM LIGHT GLASS TRAY --- */}
       <Motion.div 
         layout
-        className="flex items-center gap-1 p-1 bg-white border border-slate-100 rounded-xl shadow-sm"
+        className="flex items-center gap-1 p-1 bg-white border border-slate-100 rounded-xl shadow-sm dark:bg-slate-900 dark:border-slate-700"
       >
         <div className="relative">
           <UtilityButton 

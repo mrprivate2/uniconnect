@@ -90,6 +90,35 @@ export const createAnnouncement = catchAsync(async (req, res) => {
 });
 
 /* =========================
+   ❌ DELETE NOTIFICATION
+========================= */
+export const deleteNotification = catchAsync(async (req, res) => {
+  // Verify ownership: only the recipient can delete their notification
+  const { data: notif } = await supabase
+    .from("notifications")
+    .select("recipient_id")
+    .eq("id", req.params.id)
+    .single();
+
+  if (!notif) {
+    return res.status(404).json({ error: "Notification not found" });
+  }
+
+  if (notif.recipient_id !== req.user.id && req.user.role !== "admin") {
+    return res.status(403).json({ error: "Not authorized to delete this notification" });
+  }
+
+  const { error } = await supabase
+    .from("notifications")
+    .delete()
+    .eq("id", req.params.id);
+
+  if (error) throw error;
+
+  res.json({ message: "Notification purged" });
+});
+
+/* =========================
    ✅ MARK AS READ
 ========================= */
 export const markNotificationAsRead = catchAsync(async (req, res) => {

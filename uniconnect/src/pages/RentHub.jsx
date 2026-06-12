@@ -78,7 +78,7 @@ export default function RentHub() {
   }
 
   return (
-    <div className="relative min-h-screen pb-40 overflow-x-hidden bg-mesh font-sans text-slate-900">
+    <div className="relative min-h-screen pb-40 overflow-x-hidden bg-mesh font-sans text-slate-900 dark:text-slate-100">
       
       <div className="relative z-10 p-6 md:p-12 lg:p-16 max-w-[1600px] mx-auto">
         
@@ -113,8 +113,7 @@ export default function RentHub() {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-[9px] font-black uppercase tracking-[0.2em] mb-4 border border-indigo-100">
                 <Sparkles size={10} fill="currentColor" /> Campus Trading
-            </div>
-            <h1 className="text-5xl font-black text-slate-900 tracking-tighter">
+            </div>              <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
               Market<span className="text-gradient">Place.</span>
             </h1>
             <p className="text-slate-400 text-sm font-medium tracking-wide">SECURE RENTALS & PEER-TO-PEER COMMERCE</p>
@@ -128,7 +127,7 @@ export default function RentHub() {
                 placeholder="Search items for rent or sale..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="bg-white border border-slate-100 rounded-[1.5rem] pl-14 pr-8 py-5 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/5 w-full shadow-sm transition-all text-slate-700"
+                className="bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-700 rounded-[1.5rem] pl-14 pr-8 py-5 text-sm focus:outline-none focus:ring-4 focus:ring-indigo-500/5 w-full shadow-sm dark:shadow-slate-900 transition-all text-slate-700 dark:text-slate-200"
               />
             </div>
             <button className="p-5 bg-white border border-slate-100 rounded-2xl text-slate-400 hover:text-indigo-600 shadow-sm transition-all">
@@ -165,7 +164,7 @@ export default function RentHub() {
                       onClick={() => setSelected(item)}
                       className="break-inside-avoid cursor-pointer group"
                     >
-                      <div className="bg-white rounded-[3rem] overflow-hidden border border-slate-100 shadow-[0_20px_60px_rgba(0,0,0,0.03)] group-hover:shadow-[0_40px_100px_rgba(0,0,0,0.08)] transition-all duration-700 relative">
+                      <div className="bg-white dark:bg-slate-900 rounded-[3rem] overflow-hidden border border-slate-100 dark:border-slate-700 shadow-[0_20px_60px_rgba(0,0,0,0.03)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.2)] group-hover:shadow-[0_40px_100px_rgba(0,0,0,0.08)] transition-all duration-700 relative">
                         <div className="relative aspect-[5/6] overflow-hidden">
                           <img
                             src={getMediaUrl(item.image)}
@@ -192,13 +191,13 @@ export default function RentHub() {
                         </div>
 
                         <div className="p-10">
-                          <h3 className="text-2xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1 tracking-tight mb-2">{item.title}</h3>
+                          <h3 className="text-2xl font-black text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-1 tracking-tight mb-2">{item.title}</h3>
                           <p className="text-xs text-slate-400 font-medium line-clamp-1 mb-8">Premium student resources for rent</p>
                           
                           <div className="flex items-center justify-between pt-8 border-t border-slate-50">
                             <div className="flex flex-col">
                               <span className="text-[9px] font-black text-slate-300 uppercase tracking-[0.2em] mb-1.5">DAILY RATE</span>
-                              <span className="text-3xl font-black text-slate-900 tracking-tighter">₹{item.price}</span>
+                              <span className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">₹{item.price}</span>
                             </div>
                             <div className="w-16 h-16 bg-slate-50 text-slate-400 rounded-[1.5rem] flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition-all border border-slate-100 group-hover:border-indigo-500 shadow-sm group-hover:shadow-indigo-200">
                               <ShoppingBag size={24} strokeWidth={2.5} />

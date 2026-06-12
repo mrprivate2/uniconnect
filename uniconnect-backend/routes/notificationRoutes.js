@@ -4,7 +4,8 @@ import {
   getNotifications, 
   createAnnouncement, 
   markNotificationAsRead,
-  getAllAnnouncements
+  getAllAnnouncements,
+  deleteNotification
 } from "../controllers/notificationController.js";
 
 const router = express.Router();
@@ -12,6 +13,7 @@ const router = express.Router();
 router.get("/", protect, getNotifications);
 router.get("/all", protect, admin, getAllAnnouncements);
 router.post("/announcement", protect, admin, createAnnouncement);
+router.delete("/:id", protect, deleteNotification);
 router.put("/:id/read", protect, markNotificationAsRead);
 
 export default router;
