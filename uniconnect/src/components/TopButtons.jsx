@@ -39,7 +39,6 @@ export default function UniConnectTopBar() {
     const socket = io(API, { auth: { token } });
     
     socket.on("notification", (notif) => {
-      // Ensure structure matches
       const formattedNotif = {
           ...notif,
           _id: notif._id || notif.id,
@@ -65,11 +64,11 @@ export default function UniConnectTopBar() {
   };
 
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-1 sm:gap-4">
       {/* Dark Mode Toggle */}
       <button
         onClick={toggleTheme}
-        className="p-3.5 rounded-2xl text-slate-400 hover:text-indigo-600 hover:bg-indigo-50/50 dark:text-slate-500 dark:hover:text-indigo-400 dark:hover:bg-indigo-900/20 transition-all"
+        className="p-2 sm:p-3.5 rounded-xl sm:rounded-2xl text-slate-400 hover:text-indigo-600 hover:bg-indigo-50/50 dark:text-slate-500 dark:hover:text-indigo-400 dark:hover:bg-indigo-900/20 transition-all"
         title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
       >
         {theme === "dark" ? <Sun size={18} strokeWidth={2.5} /> : <Moon size={18} strokeWidth={2.5} />}
@@ -78,7 +77,7 @@ export default function UniConnectTopBar() {
       {/* --- PREMIUM LIGHT GLASS TRAY --- */}
       <Motion.div 
         layout
-        className="flex items-center gap-1 p-1 bg-white border border-slate-100 rounded-xl shadow-sm dark:bg-slate-900 dark:border-slate-700"
+        className="flex items-center gap-0.5 sm:gap-1 p-0.5 sm:p-1 bg-white border border-slate-100 rounded-xl shadow-sm dark:bg-slate-900 dark:border-slate-700"
       >
         <div className="relative">
           <UtilityButton 
@@ -95,7 +94,7 @@ export default function UniConnectTopBar() {
                 initial={{ opacity: 0, y: 15, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 15, scale: 0.95 }}
-                className="absolute top-12 right-0 w-80 md:w-96 bg-white border border-slate-200 rounded-[1.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.1)] overflow-hidden z-[110]"
+                className="absolute top-12 right-0 w-[calc(100vw-2rem)] sm:w-80 md:w-96 bg-white border border-slate-200 rounded-[1.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.1)] overflow-hidden z-[110]"
               >
                 <div className="p-5 border-b border-slate-50 flex justify-between items-center bg-slate-50/50">
                   <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">Activity Center</h3>
@@ -159,7 +158,7 @@ function UtilityButton({ icon, notification, onClick, label, isActive }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={onClick}
-      className={`relative flex items-center gap-2 p-3.5 rounded-2xl transition-all group ${
+      className={`relative flex items-center gap-1 sm:gap-2 p-2 sm:p-3.5 rounded-xl sm:rounded-2xl transition-all group ${
         isActive ? "bg-indigo-50 text-indigo-600" : "text-slate-400 hover:text-indigo-600 hover:bg-indigo-50/50"
       }`}
     >
@@ -179,7 +178,7 @@ function UtilityButton({ icon, notification, onClick, label, isActive }) {
             initial={{ opacity: 0, width: 0 }}
             animate={{ opacity: 1, width: "auto" }}
             exit={{ opacity: 0, width: 0 }}
-            className="text-[10px] font-black uppercase tracking-[0.2em] whitespace-nowrap overflow-hidden pr-1"
+            className="hidden sm:inline text-[10px] font-black uppercase tracking-[0.2em] whitespace-nowrap overflow-hidden pr-1"
           >
             {label}
           </Motion.span>

@@ -51,7 +51,6 @@ export default function Login({ onLogin }) {
           password: formData.password
         });
       } else {
-        // 🔥 Generate E2EE Keys for new user
         const keys = await generateKeyPair();
         
         response = await axios.post(`${API_BASE_URL}/auth/register`, {
@@ -59,17 +58,13 @@ export default function Login({ onLogin }) {
           publicKey: keys.publicKey
         });
 
-        // Store private key locally
         localStorage.setItem(`private_key_${response.data.user._id}`, keys.privateKey);
       }
 
       const { token, user } = response.data;
       console.log("Logged in user:", user);
 
-      // Ensure we have keys if they exist in DB but not local (for existing users logging in)
       if (isLogin) {
-        // In a real app, we might need a way to recover private keys, 
-        // but for now we check if we have one, or just alert.
         const existingKey = localStorage.getItem(`private_key_${user._id}`);
         if (!existingKey) {
             console.warn("No private key found on this device. E2EE chat will be restricted.");
@@ -106,7 +101,7 @@ export default function Login({ onLogin }) {
     <div className="h-screen w-full flex font-sans selection:bg-indigo-100 dark:selection:bg-indigo-900/50 bg-mesh text-slate-900 dark:text-slate-100 overflow-hidden">
       
       {/* LEFT SIDE - Premium Hero */}
-      <div          className="hidden lg:flex w-1/2 bg-white dark:bg-slate-950 sticky top-0 h-full items-center justify-center p-16 overflow-hidden border-r border-slate-100 dark:border-slate-800 flex-shrink-0">
+      <div className="hidden lg:flex w-1/2 bg-white dark:bg-slate-950 sticky top-0 h-full items-center justify-center p-16 overflow-hidden border-r border-slate-100 dark:border-slate-800 flex-shrink-0">
         <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
         
         <div className="relative z-10 max-w-lg">
@@ -143,23 +138,22 @@ export default function Login({ onLogin }) {
           </div>
         </div>
 
-        {/* Decorative elements */}
         <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-indigo-50 rounded-full blur-3xl opacity-60" />
         <div className="absolute -top-20 -right-20 w-96 h-96 bg-sky-50 rounded-full blur-3xl opacity-60" />
       </div>
 
       {/* RIGHT SIDE - Refined Auth Form */}
-      <div className="flex-1 h-full flex flex-col items-center justify-start p-6 pt-8 md:pt-16 overflow-hidden">
+      <div className="flex-1 h-full flex flex-col items-center justify-start p-3 sm:p-6 pt-4 sm:pt-8 md:pt-16 overflow-hidden">
         <motion.div 
           layout
-          className="w-full max-w-[380px] bg-white dark:bg-slate-900 rounded-[3rem] p-8 shadow-[0_20px_70px_rgba(0,0,0,0.03)] dark:shadow-[0_20px_70px_rgba(0,0,0,0.3)] border border-slate-100 dark:border-slate-700"
+          className="w-full max-w-[380px] bg-white dark:bg-slate-900 rounded-[2rem] sm:rounded-[3rem] p-5 sm:p-8 shadow-[0_20px_70px_rgba(0,0,0,0.03)] dark:shadow-[0_20px_70px_rgba(0,0,0,0.3)] border border-slate-100 dark:border-slate-700"
         >
           {/* Role & Mode Switcher */}
-          <div className="flex flex-col gap-6 mb-10">
+          <div className="flex flex-col gap-4 sm:gap-6 mb-6 sm:mb-10">
             <div className="flex bg-slate-50 dark:bg-slate-800 p-1.5 rounded-2xl border border-slate-100 dark:border-slate-700">
               <button 
                 onClick={() => setIsAdmin(false)}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black transition-all ${!isAdmin ? "bg-white dark:bg-slate-800 shadow-md text-indigo-600" : "text-slate-400 dark:text-slate-500"}`}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] sm:text-xs font-black transition-all ${!isAdmin ? "bg-white dark:bg-slate-800 shadow-md text-indigo-600" : "text-slate-400 dark:text-slate-500"}`}
               >
                 <User size={14} strokeWidth={3} /> STUDENT
               </button>
@@ -168,7 +162,7 @@ export default function Login({ onLogin }) {
                   setIsAdmin(true);
                   setIsLogin(true);
                 }}
-                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-xs font-black transition-all ${isAdmin ? "bg-white dark:bg-slate-800 shadow-md text-indigo-600" : "text-slate-400 dark:text-slate-500"}`}
+                className={`flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] sm:text-xs font-black transition-all ${isAdmin ? "bg-white dark:bg-slate-800 shadow-md text-indigo-600" : "text-slate-400 dark:text-slate-500"}`}
               >
                 <Shield size={14} strokeWidth={3} /> ADMIN
               </button>
@@ -181,20 +175,20 @@ export default function Login({ onLogin }) {
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 5 }}
-                    className="text-3xl font-black text-slate-900 dark:text-white tracking-tight"
+                    className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight"
                   >
                     {isForgot ? "Reset Protocol" : (isAdmin ? "Hello Admin" : (isLogin ? "Welcome back" : "Create account"))}
                   </motion.h2>
                 </AnimatePresence>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-1 sm:gap-3">
                   <button 
                     onClick={toggleTheme}
-                    className="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 hover:scale-110 transition-all"
+                    className="h-9 w-9 sm:h-10 sm:w-10 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 hover:scale-110 transition-all"
                     title={theme === "dark" ? "Switch to Light Mode" : "Switch to Dark Mode"}
                   >
                     {theme === "dark" ? <Sun size={20} strokeWidth={2.5} /> : <Moon size={20} strokeWidth={2.5} />}
                   </button>
-                  <div className="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                  <div className="h-9 w-9 sm:h-10 sm:w-10 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
                     <Lock size={20} strokeWidth={2.5} />
                   </div>
                 </div>
@@ -223,7 +217,7 @@ export default function Login({ onLogin }) {
             </motion.div>
           )}
 
-          <form onSubmit={handleAuth} className="space-y-5">
+          <form onSubmit={handleAuth} className="space-y-4 sm:space-y-5">
             {isForgot ? (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -271,7 +265,7 @@ export default function Login({ onLogin }) {
                       exit={{ opacity: 0, height: 0 }}
                       className="overflow-hidden"
                     >
-                      <div className="grid grid-cols-2 gap-4 pb-5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pb-5">
                         <div>
                           <label htmlFor="signup-name" className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Full Name</label>
                           <input
@@ -362,7 +356,7 @@ export default function Login({ onLogin }) {
                 exit={{ opacity: 0, height: 0 }}
                 className="overflow-hidden"
               >
-                <div className="relative flex items-center my-10">
+                <div className="relative flex items-center my-6 sm:my-10">
                   <div className="flex-grow border-t border-slate-100 dark:border-slate-700"></div>
                   <span className="px-4 text-[10px] text-slate-300 dark:text-slate-500 font-black tracking-[0.3em]">OR</span>
                   <div className="flex-grow border-t border-slate-100 dark:border-slate-700"></div>
@@ -375,7 +369,7 @@ export default function Login({ onLogin }) {
                   Explore as Guest
                 </button>
 
-                <p className="text-center mt-10 text-[11px] font-bold text-slate-400 dark:text-slate-400">
+                <p className="text-center mt-6 sm:mt-10 text-[11px] font-bold text-slate-400 dark:text-slate-400">
                     {isLogin ? "New to UniConnect?" : "Already have an account?"}{" "}
                     <button 
                     onClick={() => setIsLogin(!isLogin)}
@@ -388,7 +382,7 @@ export default function Login({ onLogin }) {
             )}
           </AnimatePresence>
 
-          <div className="mt-8 pt-6 border-t border-slate-50 dark:border-slate-700/50 text-center">
+          <div className="mt-6 sm:mt-8 pt-5 sm:pt-6 border-t border-slate-50 dark:border-slate-700/50 text-center">
             <button 
               onClick={() => {
                 localStorage.clear();
@@ -401,7 +395,7 @@ export default function Login({ onLogin }) {
           </div>
         </motion.div>
         
-        <footer className="mt-12 text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.4em]">
+        <footer className="mt-6 sm:mt-12 text-[10px] font-black text-slate-300 dark:text-slate-500 uppercase tracking-[0.4em]">
           End-to-End Encrypted Environment
         </footer>
       </div>

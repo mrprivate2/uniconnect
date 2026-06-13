@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, memo } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";  import { 
   Search, MessageSquare, Send, ArrowLeft, 
@@ -17,7 +17,7 @@ const EMOJI_SET = ["⚡", "🔒", "🔐", "🛡️", "🛰️", "💻", "🔥", 
 
 // 🔒 ENCRYPTED PULSE ANIMATION
 const EncryptedPulse = () => (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 hidden lg:block">
         {[...Array(3)].map((_, i) => (
             <motion.div
                 key={i}
@@ -281,6 +281,12 @@ export default function Chat() {
 
   return (
     <div className="h-[calc(100vh-45px)] w-full flex font-sans bg-mesh text-slate-900 dark:text-slate-100 overflow-hidden relative selection:bg-blue-100 dark:selection:bg-blue-900/50">
+      {/* Mobile back button overlay */}
+      {selectedUser && (
+        <button onClick={() => setSelectedUser(null)} className="lg:hidden fixed top-14 left-0 z-50 p-3 text-slate-600 hover:text-slate-900 bg-white/80 dark:bg-slate-950/80 backdrop-blur-sm rounded-r-xl shadow-sm border border-slate-100 dark:border-slate-800 mt-1 ml-1">
+          <ArrowLeft size={20} />
+        </button>
+      )}
         <EncryptedPulse />
         <div className={`w-full lg:w-[380px] border-r border-slate-100 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl flex flex-col shrink-0 relative z-20 ${selectedUser ? 'hidden lg:flex' : 'flex'}`}>
             <div className="p-6 pb-4">
@@ -403,7 +409,7 @@ export default function Chat() {
                                     initial={{ opacity: 0, y: 10, scale: 0.95 }}
                                     animate={{ opacity: 1, y: 0, scale: 1 }}
                                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                    className="absolute bottom-full left-8 mb-4 p-4 bg-white border border-slate-100 rounded-[2rem] shadow-[0_-20px_60px_rgba(0,0,0,0.05)] grid grid-cols-6 gap-2 z-50"
+                                    className="absolute bottom-full left-2 sm:left-8 mb-4 p-3 sm:p-4 bg-white border border-slate-100 rounded-[2rem] shadow-[0_-20px_60px_rgba(0,0,0,0.05)] grid grid-cols-5 sm:grid-cols-6 gap-1.5 sm:gap-2 z-50"
                                 >
                                     {EMOJI_SET.map(e => (
                                         <button 
@@ -459,7 +465,7 @@ export default function Chat() {
 }
 
 // 🫧 E2EE Message Bubble Component
-function MessageBubble({ msg, isMe, decryptMessageText: decryptFn }) {
+const MessageBubble = memo(function MessageBubble({ msg, isMe, decryptMessageText: decryptFn }) {
   const [displayText, setDisplayText] = useState(msg.text);
   
   useEffect(() => {
@@ -511,4 +517,4 @@ function MessageBubble({ msg, isMe, decryptMessageText: decryptFn }) {
       </div>
     </motion.div>
   );
-}
+});

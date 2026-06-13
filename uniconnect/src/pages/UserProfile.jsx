@@ -14,7 +14,7 @@ import { getMediaUrl } from "../utils/media";
 
 // 🌌 Aesthetic Background
 const AestheticBackground = () => (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 hidden lg:block">
         <motion.div 
             animate={{ x: [-50, 50, -50], y: [-20, 20, -20], scale: [1, 1.1, 1] }}
             transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
@@ -179,13 +179,13 @@ export default function UserProfile() {
         </div>
       </header>
 
-      <main className="pt-16 px-6 max-w-4xl mx-auto relative z-10">
+      <main className="pt-16 px-3 sm:px-6 max-w-4xl mx-auto relative z-10">
         
         {/* Profile Header Card */}
-        <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 border border-blue-50 dark:border-slate-700 shadow-[0_20px_60px_rgba(0,0,0,0.03)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.2)] mb-12 relative overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-[1.5rem] sm:rounded-[3rem] p-5 sm:p-10 border border-blue-50 dark:border-slate-700 shadow-[0_20px_60px_rgba(0,0,0,0.03)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.2)] mb-8 sm:mb-12 relative overflow-hidden">
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl" />
             
-            <div className="flex flex-col md:flex-row items-center gap-12 relative z-10">
+            <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-12 relative z-10">
                 {/* Avatar */}
                 <div className="relative group">
                     <div className="absolute -inset-1 bg-gradient-to-tr from-blue-600 to-indigo-400 rounded-full animate-spin-slow opacity-20 group-hover:opacity-100 transition-opacity duration-700" />
@@ -213,7 +213,7 @@ export default function UserProfile() {
                     </div>
 
                     {/* Stats Grid */}
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-3 gap-2 sm:gap-3">
                         <motion.div whileHover={{ scale: 1.03 }} className="bg-indigo-50/50 dark:bg-indigo-900/20 border border-indigo-100/50 dark:border-indigo-800/50 p-4 rounded-2xl text-center">
                             <p className="text-xl font-black text-indigo-600">{posts.length}</p>
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Posts</p>
@@ -256,9 +256,8 @@ export default function UserProfile() {
             </div>
         </div>
 
-        {/* Content Tabs */}
-        <div className="flex justify-center border-t border-slate-100 dark:border-slate-700 relative mb-10">
-            <div className="flex gap-8 md:gap-12">
+        {/* Content Tabs */}            <div className="flex justify-center border-t border-slate-100 dark:border-slate-700 relative mb-6 sm:mb-10">
+            <div className="flex gap-4 sm:gap-8 md:gap-12">
                 {[
                     { id: "grid", label: "POSTS", icon: Grid },
                     { id: "reels", label: "MEDIA", icon: Film },
@@ -282,7 +281,7 @@ export default function UserProfile() {
         </div>
 
         {/* Posts Grid */}
-        <div className="grid grid-cols-3 gap-2 md:gap-8">
+        <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-8">
             {posts.length > 0 ? (
                 posts.map(post => (
                     <motion.div 
@@ -290,7 +289,7 @@ export default function UserProfile() {
                         animate={{ opacity: 1, scale: 1 }}
                         whileHover={{ y: -8 }}
                         key={post._id} 
-                        className="aspect-square bg-white rounded-[1.5rem] md:rounded-[3rem] relative group cursor-pointer overflow-hidden border border-blue-50 shadow-sm hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500" 
+                        className="aspect-square bg-white rounded-[0.75rem] sm:rounded-[1.5rem] md:rounded-[3rem] relative group cursor-pointer overflow-hidden border border-blue-50 shadow-sm hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500" 
                         onClick={() => navigate('/feed')}
                     >
                         {post.image ? (

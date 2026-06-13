@@ -7,7 +7,7 @@ import { useAuth } from "../context/AuthContext";
 
 // 🛠️ HARDWARE CIRCUITRY ANIMATION
 const Circuitry = () => (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-[0.03]">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 opacity-[0.03] hidden lg:block">
         <svg width="100%" height="100%">
             <pattern id="circuit" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
                 <path d="M0 50 H30 L50 20 H100 M50 20 V0 M30 50 L10 80 H0" stroke="currentColor" strokeWidth="1" fill="none" className="text-blue-600" />
@@ -116,20 +116,20 @@ export default function Settings() {
   return (
     <div className="min-h-screen pb-40 font-sans bg-mesh text-slate-900 dark:text-slate-100 relative overflow-hidden selection:bg-blue-100 dark:selection:bg-blue-900/50">
       <Circuitry />
-      <div className="max-w-[1200px] mx-auto p-6 md:p-10 lg:p-16 lg:pt-4 relative z-10">
+      <div className="max-w-[1200px] mx-auto p-3 sm:p-6 md:p-10 lg:p-16 lg:pt-4 relative z-10">
         
         {/* HEADER SECTION */}
         <motion.header 
           initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6"
+          className="mb-8 sm:mb-12 flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6"
         >
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-600 text-[9px] font-black uppercase tracking-[0.2em] mb-4 border border-indigo-100">
                 <ShieldCheck size={10} strokeWidth={3} /> Verified Security Instance
             </div>
-            <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-1">
+            <h1 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-1">
               System<span className="text-indigo-600">.</span>Config
             </h1>
             <p className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">Environment Node ID: <span className="text-slate-600">{user._id || "Scanning..."}</span></p>
@@ -140,7 +140,7 @@ export default function Settings() {
             whileTap={{ scale: 0.98 }}
             onClick={handleSave}
             disabled={isSaving}
-            className="bg-slate-900 dark:bg-indigo-600 text-white px-8 py-4 rounded-2xl font-black text-[10px] tracking-[0.2em] hover:bg-black dark:hover:bg-indigo-700 transition-all shadow-xl shadow-slate-200 dark:shadow-slate-900 disabled:opacity-50 flex items-center gap-3 self-start md:self-auto"
+            className="bg-slate-900 dark:bg-indigo-600 text-white px-5 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl font-black text-[8px] sm:text-[10px] tracking-[0.2em] hover:bg-black dark:hover:bg-indigo-700 transition-all shadow-xl shadow-slate-200 dark:shadow-slate-900 disabled:opacity-50 flex items-center gap-3 self-start md:self-auto w-full sm:w-auto justify-center"
           >
             {isSaving ? (
               <div className="h-4 w-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />

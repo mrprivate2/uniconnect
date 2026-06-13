@@ -109,12 +109,14 @@ export default function SelectCollege({ onSelect }) {
   return (
     <div className="flex h-screen w-full overflow-hidden font-sans selection:bg-blue-100 dark:selection:bg-blue-900/50 bg-mesh text-slate-900 dark:text-slate-100 relative">
       
-      {/* 🛸 STEALTH INTERCEPTOR ANIMATIONS */}
-      <StealthDrone delay={0} />
-      <StealthDrone delay={9} />
+      {/* 🛸 STEALTH INTERCEPTOR ANIMATIONS - Desktop only */}
+      <div className="hidden lg:block">
+        <StealthDrone delay={0} />
+        <StealthDrone delay={9} />
+      </div>
 
-      {/* BACKGROUND MESH GRADIENTS */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      {/* BACKGROUND MESH GRADIENTS - Desktop only */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden z-0 hidden lg:block">
         <motion.div
           animate={{
             x: [0, 100, 0],
@@ -186,9 +188,9 @@ export default function SelectCollege({ onSelect }) {
       </div>
 
       {/* RIGHT PANEL */}
-      <div className="flex-1 flex flex-col items-center justify-center p-8 relative z-10 overflow-y-auto no-scrollbar">
+      <div className="flex-1 flex flex-col items-center justify-center p-3 sm:p-8 relative z-10 overflow-y-auto no-scrollbar">
         <motion.div 
-          className="w-full max-w-[480px] bg-white dark:bg-slate-900 rounded-[3rem] p-10 shadow-[0_30px_100px_rgba(0,0,0,0.02)] dark:shadow-[0_30px_100px_rgba(0,0,0,0.3)] border border-blue-50 dark:border-slate-700"
+          className="w-full max-w-[480px] bg-white dark:bg-slate-900 rounded-[1.5rem] sm:rounded-[3rem] p-5 sm:p-10 shadow-[0_30px_100px_rgba(0,0,0,0.02)] dark:shadow-[0_30px_100px_rgba(0,0,0,0.3)] border border-blue-50 dark:border-slate-700"
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}

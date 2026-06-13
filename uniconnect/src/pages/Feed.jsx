@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState, useCallback, useRef, memo } from "react";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -319,7 +319,7 @@ const MysticalRune = ({ delay = 0, x = 0 }) => (
 // 🌟 EPIC BACKGROUND ANIMATION
 // ======================================
 const AnimatedBackground = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+  <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 hidden lg:block">
     {/* Shifting aurora spotlights */}
     <motion.div
       animate={{ x: [-80, 80, -80], y: [-40, 40, -40], scale: [1, 1.15, 1] }}
@@ -638,27 +638,24 @@ export default function Feed() {
   );
 
   return (
-    <div className="min-h-screen pt-4 pb-40 px-4 flex flex-col items-center space-y-6 bg-mesh relative dark:text-slate-100">
-      <AnimatedBackground />
-
-      {/* HEADER */}        <div className="w-full max-w-xl flex flex-col gap-6 relative z-10">
+    <div className="min-h-screen pt-3 sm:pt-4 pb-28 sm:pb-40 px-2 sm:px-4 flex flex-col items-center space-y-4 sm:space-y-6 bg-mesh relative dark:text-slate-100">
+      <AnimatedBackground />        {/* HEADER */}        <div className="w-full max-w-xl flex flex-col gap-4 sm:gap-6 relative z-10">
         <div className="flex items-center justify-between">
           <div>
             <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-[8px] font-black uppercase tracking-[0.25em] mb-2 border border-indigo-100 dark:border-indigo-800/50">
               <Globe size={10} strokeWidth={3} /> Campus Network
             </div>
-            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tighter">
               The <span className="text-gradient">Feed.</span>
             </h1>
           </div>
-          {user && (
-            <motion.button
+          {user && (              <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/create")}
-              className="px-5 py-2.5 bg-slate-900 dark:bg-indigo-600 text-white rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-indigo-700 transition-all shadow-lg shadow-slate-200 dark:shadow-slate-900 flex items-center gap-2"
+              className="px-3 sm:px-5 py-2 sm:py-2.5 bg-slate-900 dark:bg-indigo-600 text-white rounded-xl text-[8px] sm:text-[9px] font-black uppercase tracking-widest hover:bg-black dark:hover:bg-indigo-700 transition-all shadow-lg shadow-slate-200 dark:shadow-slate-900 flex items-center gap-1.5 sm:gap-2"
             >
-              <Sparkles size={12} /> Post
+              <Sparkles size={10} className="sm:w-3 sm:h-3" /> Post
             </motion.button>
           )}
         </div>
@@ -676,7 +673,7 @@ export default function Feed() {
         </div>
 
         {/* TABS */}
-        <div className="flex gap-3 overflow-x-auto pb-1 no-scrollbar">
+        <div className="flex gap-2 sm:gap-3 overflow-x-auto pb-1 no-scrollbar">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.id;
             return (
@@ -684,7 +681,7 @@ export default function Feed() {
                 key={tab.id}
                 layout
                 onClick={() => setActiveTab(tab.id)}
-                className={`relative px-6 py-3.5 rounded-[1.5rem] text-[10px] font-black tracking-[0.15em] transition-all uppercase flex items-center gap-2.5 shrink-0 ${
+                className={`relative px-3 sm:px-6 py-2.5 sm:py-3.5 rounded-[1.5rem] text-[8px] sm:text-[10px] font-black tracking-[0.15em] transition-all uppercase flex items-center gap-1.5 sm:gap-2.5 shrink-0 ${
                   isActive
                     ? "bg-slate-900 dark:bg-indigo-600 text-white shadow-xl shadow-slate-200/50 dark:shadow-slate-900"
                     : "bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm text-slate-400 dark:text-slate-400 border border-slate-100 dark:border-slate-700 hover:border-slate-200 dark:hover:border-slate-600 hover:text-slate-600 dark:hover:text-slate-200"
@@ -859,7 +856,7 @@ export default function Feed() {
 // ============================
 // 📅 EVENT CARD
 // ============================
-function EventCard({ event, handleDelete, onClick }) {
+const EventCard = memo(function EventCard({ event, handleDelete, onClick }) {
   const { user } = useAuth();
   return (
     <motion.div
@@ -921,12 +918,12 @@ function EventCard({ event, handleDelete, onClick }) {
       </div>
     </motion.div>
   );
-}
+});
 
 // ============================
 // 🏪 MARKET CARD
 // ============================
-function MarketCard({ item, onClick }) {
+const MarketCard = memo(function MarketCard({ item, onClick }) {
   return (
     <motion.div
       whileHover={{ y: -8, scale: 1.02 }}
@@ -981,12 +978,12 @@ function MarketCard({ item, onClick }) {
       </div>
     </motion.div>
   );
-}
+});
 
 // ============================
 // 📄 POST CARD
 // ============================
-function PostCard({ post, handleLike, handleDelete, handleReport, commentValue, setCommentValue, onCommentSubmit, onClick }) {
+const PostCard = memo(function PostCard({ post, handleLike, handleDelete, handleReport, commentValue, setCommentValue, onCommentSubmit, onClick }) {
   const { user } = useAuth();
   // Track like clicks for animation trigger (server state from post.likes)
   const isLiked = post.likes?.includes(user?._id);
@@ -1171,4 +1168,4 @@ function PostCard({ post, handleLike, handleDelete, handleReport, commentValue, 
       </div>
     </motion.div>
   );
-}
+});

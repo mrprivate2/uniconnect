@@ -230,7 +230,7 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0c0f1a] text-slate-900 dark:text-slate-100 font-sans flex flex-col bg-mesh">
       {/* HEADER */}
-      <header className="border-b border-slate-100 dark:border-slate-800 bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl sticky top-0 z-50 px-8 py-5">
+      <header className="border-b border-slate-100 dark:border-slate-800 bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl sticky top-0 z-50 px-3 sm:px-8 py-3 sm:py-5">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-4">
             <div className="bg-slate-900 p-3 rounded-2xl shadow-xl shadow-slate-200">
@@ -257,7 +257,7 @@ export default function AdminDashboard() {
         </div>
       </header>
 
-      <main className="flex-1 max-w-7xl mx-auto w-full p-8 md:p-12 lg:p-16">
+      <main className="flex-1 max-w-7xl mx-auto w-full p-3 sm:p-8 md:p-12 lg:p-16">
         
         {/* Stats row for small/medium screens (hidden on lg+) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8 lg:hidden">
@@ -273,29 +273,29 @@ export default function AdminDashboard() {
         <div className="flex-1 min-w-0">
 
         {/* TABS & SEARCH */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-6">
-          <div className="flex bg-white dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm dark:shadow-slate-900 w-fit overflow-x-auto no-scrollbar">
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 sm:mb-10 gap-4 sm:gap-6">
+          <div className="flex bg-white dark:bg-slate-900 p-1 rounded-xl sm:p-1.5 sm:rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm dark:shadow-slate-900 w-full sm:w-fit overflow-x-auto no-scrollbar">
             <button 
               onClick={() => setActiveTab("users")}
-              className={`flex items-center gap-3 px-8 py-3.5 rounded-[1.2rem] text-[10px] font-black uppercase tracking-widest transition-all shrink-0 ${activeTab === 'users' ? "bg-indigo-600 text-white shadow-xl shadow-indigo-100 dark:shadow-indigo-900/30" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-slate-800"}`}
+              className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-8 py-2.5 sm:py-3.5 rounded-[0.8rem] sm:rounded-[1.2rem] text-[8px] sm:text-[10px] font-black uppercase tracking-widest transition-all shrink-0 ${activeTab === 'users' ? "bg-indigo-600 text-white shadow-xl shadow-indigo-100 dark:shadow-indigo-900/30" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-slate-800"}`}
             >
               <Users size={16} strokeWidth={3} /> Users
             </button>
             <button 
               onClick={() => setActiveTab("colleges")}
-              className={`flex items-center gap-3 px-8 py-3.5 rounded-[1.2rem] text-[10px] font-black uppercase tracking-widest transition-all shrink-0 ${activeTab === 'colleges' ? "bg-indigo-600 text-white shadow-xl shadow-indigo-100 dark:shadow-indigo-900/30" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-slate-800"}`}
+              className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-8 py-2.5 sm:py-3.5 rounded-[0.8rem] sm:rounded-[1.2rem] text-[8px] sm:text-[10px] font-black uppercase tracking-widest transition-all shrink-0 ${activeTab === 'colleges' ? "bg-indigo-600 text-white shadow-xl shadow-indigo-100 dark:shadow-indigo-900/30" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-slate-800"}`}
             >
               <GraduationCap size={16} strokeWidth={3} /> Colleges
             </button>
             <button 
               onClick={() => setActiveTab("announcements")}
-              className={`flex items-center gap-3 px-8 py-3.5 rounded-[1.2rem] text-[10px] font-black uppercase tracking-widest transition-all shrink-0 ${activeTab === 'announcements' ? "bg-indigo-600 text-white shadow-xl shadow-indigo-100 dark:shadow-indigo-900/30" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-slate-800"}`}
+              className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-8 py-2.5 sm:py-3.5 rounded-[0.8rem] sm:rounded-[1.2rem] text-[8px] sm:text-[10px] font-black uppercase tracking-widest transition-all shrink-0 ${activeTab === 'announcements' ? "bg-indigo-600 text-white shadow-xl shadow-indigo-100 dark:shadow-indigo-900/30" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-slate-800"}`}
             >
               <Sparkles size={16} strokeWidth={3} /> Announcements
             </button>
             <button 
               onClick={() => setActiveTab("reports")}
-              className={`flex items-center gap-3 px-8 py-3.5 rounded-[1.2rem] text-[10px] font-black uppercase tracking-widest transition-all shrink-0 ${activeTab === 'reports' ? "bg-indigo-600 text-white shadow-xl shadow-indigo-100 dark:shadow-indigo-900/30" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-slate-800"}`}
+              className={`flex items-center gap-2 sm:gap-3 px-3 sm:px-8 py-2.5 sm:py-3.5 rounded-[0.8rem] sm:rounded-[1.2rem] text-[8px] sm:text-[10px] font-black uppercase tracking-widest transition-all shrink-0 ${activeTab === 'reports' ? "bg-indigo-600 text-white shadow-xl shadow-indigo-100 dark:shadow-indigo-900/30" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:text-slate-500 dark:hover:text-slate-300 dark:hover:bg-slate-800"}`}
             >
               <AlertTriangle size={16} strokeWidth={3} /> Reports
             </button>

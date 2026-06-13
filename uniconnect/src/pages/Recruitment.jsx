@@ -14,7 +14,7 @@ import ContentModal from "../components/ContentModal";
 
 // 🌌 AESTHETIC BACKGROUND (Floating Orbs & Aurora)
 const AestheticBackground = () => (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 hidden lg:block">
         <motion.div 
             animate={{ x: [-50, 50, -50], y: [-20, 20, -20], scale: [1, 1.1, 1] }}
             transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
@@ -76,15 +76,15 @@ export default function Recruitment() {
     <div className="min-h-screen bg-mesh font-sans text-slate-900 dark:text-slate-100 relative overflow-x-hidden selection:bg-blue-100 dark:selection:bg-blue-900/50">
       <AestheticBackground />
 
-      <main className="max-w-6xl mx-auto pt-4 pb-20 px-6 relative z-10">
+      <main className="max-w-6xl mx-auto pt-3 sm:pt-4 pb-16 sm:pb-20 px-3 sm:px-6 relative z-10">
         
         {/* --- COMPACT DASHBOARD HEADER --- */}
-        <div className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-[2.5rem] p-8 border border-blue-50 dark:border-slate-700 shadow-xl shadow-blue-500/5 dark:shadow-slate-900 mb-8 flex flex-col md:flex-row justify-between items-center gap-8">
+        <div className="bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 border border-blue-50 dark:border-slate-700 shadow-xl shadow-blue-500/5 dark:shadow-slate-900 mb-6 sm:mb-8 flex flex-col md:flex-row justify-between items-center gap-4 sm:gap-8">
             <div className="text-center md:text-left">
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-600 text-white text-[9px] font-black uppercase tracking-widest mb-3">
                     <Zap size={12} fill="currentColor" /> Live Grid
                 </div>
-                <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Opportunities</h1>
+                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">Opportunities</h1>
                 <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mt-1">Found {listings.length} active nodes</p>
             </div>
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, memo } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import { 
@@ -11,7 +11,7 @@ import { getMediaUrl } from "../utils/media";
 
 // 🌌 Aesthetic Background
 const AestheticBackground = () => (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 hidden lg:block">
         <motion.div 
             animate={{ x: [-50, 50, -50], y: [-20, 20, -20], scale: [1, 1.1, 1] }}
             transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
@@ -107,7 +107,7 @@ export default function FindFriends() {
   const resultCount = displayFriends.length;
 
   return (
-    <div className="min-h-screen pb-40 px-4 font-sans bg-mesh text-slate-900 dark:text-slate-100 relative overflow-hidden selection:bg-blue-100 dark:selection:bg-blue-900/50">
+    <div className="min-h-screen pb-28 sm:pb-40 px-2 sm:px-4 font-sans bg-mesh text-slate-900 dark:text-slate-100 relative overflow-hidden selection:bg-blue-100 dark:selection:bg-blue-900/50">
       <AestheticBackground />
       <div className="max-w-[1200px] mx-auto relative z-10 pt-2">
         
@@ -123,7 +123,7 @@ export default function FindFriends() {
           </div>
           <div className="flex items-end justify-between gap-4">
             <div>
-              <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-2">
+              <h1 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-2">
                 Find <span className="text-gradient">Peers.</span>
               </h1>
               <p className="text-slate-400 font-bold uppercase tracking-widest text-[10px]">
@@ -381,7 +381,7 @@ export default function FindFriends() {
 }
 
 // 👤 Friend Card Component
-function FriendCard({ friend, isSent, onConnect }) {
+const FriendCard = memo(function FriendCard({ friend, isSent, onConnect }) {
   const followed = friend.isFollowing || isSent;
   
   return (
@@ -414,4 +414,4 @@ function FriendCard({ friend, isSent, onConnect }) {
       </motion.button>
     </motion.div>
   );
-}
+});

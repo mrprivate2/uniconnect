@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 
 // 📡 RADAR SCAN ANIMATION
 const RadarScan = () => (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 hidden lg:block">
         <motion.div 
             animate={{ rotate: 360 }}
             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
@@ -110,7 +110,7 @@ export default function Notifications() {
   return (
     <div className="min-h-screen pb-40 font-sans bg-mesh text-slate-900 dark:text-slate-100 relative overflow-hidden selection:bg-blue-100 dark:selection:bg-blue-900/50">
       <RadarScan />
-      <div className="max-w-2xl mx-auto p-6 pt-4 relative z-10">
+      <div className="max-w-2xl mx-auto p-3 sm:p-6 pt-3 sm:pt-4 relative z-10">
         
         {/* Header */}
         <motion.header 
@@ -123,7 +123,7 @@ export default function Notifications() {
             <div className="inline-flex items-center gap-2 px-2.5 py-1.5 rounded-full bg-indigo-50 text-indigo-600 text-[9px] font-black uppercase tracking-[0.2em] mb-4 border border-indigo-100">
                 <ShieldCheck size={10} strokeWidth={3} /> Signal Processor
             </div>
-            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-1">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-1">
               Neural<span className="text-indigo-600">.</span>Inbox
             </h1>
             <p className="text-slate-400 font-bold uppercase tracking-widest text-[9px]">

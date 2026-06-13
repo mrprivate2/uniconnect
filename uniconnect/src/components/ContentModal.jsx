@@ -125,7 +125,7 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
 
   return (
     <>
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10">
+      <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-10">
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -138,10 +138,10 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
           initial={{ opacity: 0, scale: 0.95, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          className="relative bg-white dark:bg-slate-900 w-full max-w-6xl h-[90vh] md:h-[85vh] rounded-[3.5rem] overflow-hidden shadow-2xl dark:shadow-slate-900 flex flex-col md:flex-row bg-mesh"
+          className="relative bg-white dark:bg-slate-900 w-full max-w-6xl h-full sm:h-[90vh] md:h-[85vh] rounded-t-[2rem] sm:rounded-[3.5rem] overflow-hidden shadow-2xl dark:shadow-slate-900 flex flex-col md:flex-row bg-mesh"
         >
           {/* LEFT: MEDIA & CONTENT */}
-          <div className="w-full md:w-[60%] h-[40%] md:h-full bg-slate-50 dark:bg-slate-800 border-r border-slate-100 dark:border-slate-700 relative group">
+          <div className="w-full md:w-[60%] h-[30%] sm:h-[40%] md:h-full bg-slate-50 dark:bg-slate-800 border-r border-slate-100 dark:border-slate-700 relative group">
               {content.image ? (
                   <div className="w-full h-full flex items-center justify-center p-8">
                       {content.media_type === 'video' ? (
@@ -167,7 +167,7 @@ export default function ContentModal({ content: initialContent, onClose, onUpdat
           </div>
 
           {/* RIGHT: INFO & COMMS */}
-          <div className="flex-1 h-[60%] md:h-full flex flex-col bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl relative">
+          <div className="flex-1 h-[70%] sm:h-[60%] md:h-full flex flex-col bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl relative">
               
               {/* Header */}
               <div className="p-8 border-b border-slate-50 dark:border-slate-700/50 flex items-center justify-between">

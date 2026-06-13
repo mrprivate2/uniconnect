@@ -104,7 +104,7 @@ export default function CreatePost() {
     <div className="h-screen w-full flex flex-col lg:flex-row bg-[#F8FAFC] dark:bg-[#0c0f1a] font-sans bg-mesh overflow-hidden dark:text-slate-100">
       
       {/* COMPACT SIDEBAR: System Status */}
-      <div className="w-full lg:w-[320px] bg-slate-900 dark:bg-slate-950 flex flex-col justify-between p-8 text-white relative shrink-0">
+      <div className="w-full lg:w-[320px] bg-slate-900 dark:bg-slate-950 flex flex-col justify-between p-4 sm:p-8 text-white relative shrink-0 lg:min-h-screen">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_30%_20%,rgba(99,102,241,0.1),transparent)]" />
         
         <div className="relative z-10">
@@ -127,9 +127,9 @@ export default function CreatePost() {
                 <ShieldCheck size={10} strokeWidth={3} /> Node Secure
             </div>
             
-            <h1 className="text-4xl font-black tracking-tighter leading-[0.9] mb-4 text-white">
+            <h1 className="text-2xl sm:text-4xl font-black tracking-tighter leading-[0.9] mb-4 text-white">
                 Initialize<br /> 
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 text-5xl">Broadcast.</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400 text-3xl sm:text-5xl">Broadcast.</span>
             </h1>
             
             <p className="text-[11px] text-slate-400 font-medium leading-relaxed max-w-[220px]">
@@ -149,7 +149,7 @@ export default function CreatePost() {
       </div>
 
       {/* CORE CONFIGURATION: Protocol Interface */}
-      <div className="flex-1 flex flex-col items-center justify-center p-4 lg:p-10 relative overflow-hidden bg-mesh">
+      <div className="flex-1 flex flex-col items-center justify-center p-3 sm:p-4 lg:p-10 relative overflow-hidden bg-mesh">
           
           <AnimatePresence>
             {validationError && (
@@ -169,7 +169,7 @@ export default function CreatePost() {
           <motion.div 
             initial={{ opacity: 0, scale: 0.99 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 lg:p-10 shadow-[0_20px_80px_rgba(0,0,0,0.02)] dark:shadow-[0_20px_80px_rgba(0,0,0,0.3)] border border-slate-100 dark:border-slate-700 relative max-h-[90vh] overflow-y-auto custom-scrollbar"
+            className="w-full max-w-2xl bg-white dark:bg-slate-900 rounded-[1.5rem] sm:rounded-[2.5rem] p-4 sm:p-8 lg:p-10 shadow-[0_20px_80px_rgba(0,0,0,0.02)] dark:shadow-[0_20px_80px_rgba(0,0,0,0.3)] border border-slate-100 dark:border-slate-700 relative max-h-[90vh] overflow-y-auto custom-scrollbar"
           >
             <div className="flex justify-between items-center mb-8 px-1">
                 <div>

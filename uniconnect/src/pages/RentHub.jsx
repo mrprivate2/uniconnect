@@ -80,7 +80,7 @@ export default function RentHub() {
   return (
     <div className="relative min-h-screen pb-40 overflow-x-hidden bg-mesh font-sans text-slate-900 dark:text-slate-100">
       
-      <div className="relative z-10 p-6 md:p-12 lg:p-16 max-w-[1600px] mx-auto">
+      <div className="relative z-10 p-3 sm:p-6 md:p-12 lg:p-16 max-w-[1600px] mx-auto">
         
         {/* FILTER TABS */}
         <div className="flex gap-4 mb-14 overflow-x-auto pb-4 no-scrollbar">
@@ -113,7 +113,7 @@ export default function RentHub() {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-[9px] font-black uppercase tracking-[0.2em] mb-4 border border-indigo-100">
                 <Sparkles size={10} fill="currentColor" /> Campus Trading
-            </div>              <h1 className="text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
+            </div>              <h1 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tighter">
               Market<span className="text-gradient">Place.</span>
             </h1>
             <p className="text-slate-400 text-sm font-medium tracking-wide">SECURE RENTALS & PEER-TO-PEER COMMERCE</p>

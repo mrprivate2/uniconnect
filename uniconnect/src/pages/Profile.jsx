@@ -16,7 +16,7 @@ import toast from "react-hot-toast";
 
 // 🌌 AESTHETIC BACKGROUND (Floating Orbs & Aurora)
 const AestheticBackground = () => (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 hidden lg:block">
         {/* Shifting Aurora Spotlights */}
         <motion.div 
             animate={{ 
@@ -213,14 +213,14 @@ export default function Profile() {
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto pt-16 px-6 relative z-10">
+      <main className="max-w-4xl mx-auto pt-16 px-3 sm:px-6 relative z-10">
         
         {/* --- PROFILE HEADER CARD (INSTA-TECH BLEND) --- */}
-        <div className="bg-white dark:bg-slate-900 rounded-[3rem] p-10 border border-blue-50 dark:border-slate-700 shadow-[0_20px_60px_rgba(0,0,0,0.03)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.2)] mb-12 relative overflow-hidden">
+        <div className="bg-white dark:bg-slate-900 rounded-[1.5rem] sm:rounded-[3rem] p-5 sm:p-10 border border-blue-50 dark:border-slate-700 shadow-[0_20px_60px_rgba(0,0,0,0.03)] dark:shadow-[0_20px_60px_rgba(0,0,0,0.2)] mb-8 sm:mb-12 relative overflow-hidden">
             {/* Decorative inner glow */}
             <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-50/50 rounded-full blur-3xl" />
             
-            <div className="flex flex-col md:flex-row items-center gap-12 relative z-10">
+            <div className="flex flex-col md:flex-row items-center gap-6 sm:gap-12 relative z-10">
                 {/* Avatar with Tech Border */}
                 <div className="relative group">
                     <div className="absolute -inset-1 bg-gradient-to-tr from-blue-600 to-indigo-400 rounded-full animate-spin-slow opacity-20 group-hover:opacity-100 transition-opacity duration-700" />
@@ -262,7 +262,7 @@ export default function Profile() {
                     </div>
 
                     {/* Stats Dashboard Grid */}
-                    <div className="grid grid-cols-3 gap-3">
+                    <div className="grid grid-cols-3 gap-2 sm:gap-3">
                         <motion.div whileHover={{ scale: 1.03 }} className="bg-indigo-50/50 dark:bg-indigo-900/20 border border-indigo-100/50 dark:border-indigo-800/50 p-4 rounded-2xl text-center cursor-default">
                             <p className="text-xl font-black text-indigo-600">{posts.length}</p>
                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Logs</p>
@@ -288,9 +288,8 @@ export default function Profile() {
             </div>
         </div>
 
-        {/* --- CONTENT NAVIGATION (TAB SWITCHER) --- */}
-        <div className="flex justify-center border-t border-slate-100 dark:border-slate-700 relative mb-10">
-            <div className="flex gap-8 md:gap-12">
+        {/* --- CONTENT NAVIGATION (TAB SWITCHER) --- */}            <div className="flex justify-center border-t border-slate-100 dark:border-slate-700 relative mb-6 sm:mb-10">
+            <div className="flex gap-4 sm:gap-8 md:gap-12">
                 {[
                     { id: "grid", label: "DATA LOGS", icon: LayoutGrid },
                     { id: "management", label: "ADMIN SECTOR", icon: Briefcase },
@@ -358,7 +357,7 @@ export default function Profile() {
             </div>
           ) : (
             /* POSTS GRID (UNIFIED LOGS/SAVED) */
-            <div className="grid grid-cols-3 gap-2 md:gap-8">
+            <div className="grid grid-cols-3 gap-1 sm:gap-2 md:gap-8">
                 {profileLoading ? (
                     [...Array(6)].map((_, i) => (
                     <div key={i} className="aspect-square bg-white rounded-[2rem] animate-pulse border border-slate-50 shadow-sm" />
