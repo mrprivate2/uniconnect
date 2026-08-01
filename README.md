@@ -1,6 +1,3 @@
-<img src="https://img.shields.io/badge/status-active-success.svg" alt="Status" />
-<img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" />
-
 # 🎓 UniConnect
 
 **The Student Operating System** — A full-stack campus social platform with E2EE chat, marketplace, event management, and recruitment features. Built with React, Express, Supabase, and Socket.IO.
